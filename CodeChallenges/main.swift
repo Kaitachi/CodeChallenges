@@ -6,6 +6,6 @@
 //
 
 import Foundation
+import ChallengeBase
 
 print("Hello, World!")
-
