@@ -17,6 +17,7 @@ enum AdventOfCode2021_Algorithms : String, CaseIterable {
 // MARK: - Challenge Solutions
 enum AdventOfCode2021_Solutions : String, CaseIterable {
     case Day01
+    case Day02
 }
 
 class AdventOfCode2021 : Challenge {
@@ -25,10 +26,12 @@ class AdventOfCode2021 : Challenge {
     typealias Solutions = AdventOfCode2021_Solutions
         
     // MARK: - Abstract Factory Creator
-    static func create(_ solution: Solutions, datasets: [String] = [], algorithms: [Algorithms] = []) -> any Solution {
+    static func create(_ solution: Solutions) -> any Solution {
         switch solution {
         case .Day01:
-            return AdventOfCode2021.Day01(datasets: datasets, algorithms: algorithms)
+            return AdventOfCode2021.Day01()
+        case .Day02:
+            return AdventOfCode2021.Day02()
         }
     }
     

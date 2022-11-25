@@ -24,3 +24,9 @@ declaredSolution.execute()
 //
 //
 //factorySolution.execute()
+
+
+
+var day02 = AdventOfCode2021.Day02(datasets: resourceSets, algorithms: [.part01, .part02])
+
+day02.execute()
