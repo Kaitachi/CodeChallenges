@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Type Aliases
 typealias Coordinate = (x: Int, y: Int)
-typealias Grid2D = [[Int]]
+typealias Grid2D = [[Int?]]
 
 
 // MARK: - Int Methods
