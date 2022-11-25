@@ -22,3 +22,6 @@ day03.execute()
 
 var day04 = AdventOfCode2021.Day04(datasets: resourceSets, algorithms: [.part01, .part02])
 day04.execute()
+
+var day05 = AdventOfCode2021.Day05(datasets: resourceSets, algorithms: [.part01])
+day05.execute()
