@@ -20,6 +20,24 @@ extension Int {
 }
 
 
+// MARK: - [Int] Methods
+extension [Int] {
+    static func generateRowsAndColumns(for size: Int) -> [[Int]] {
+        let rows = stride(from: 0, to: size * size, by: size)
+            .map { start in
+                return Array(stride(from: start, to: start + size, by: 1))
+            }
+        
+        let columns = stride(from: 0, to: size, by: 1)
+            .map { start in
+                return Array(stride(from: start, to: size * size, by: size))
+            }
+        
+        return rows + columns
+    }
+}
+
+
 // MARK: - UInt64 Methods
 extension UInt64 {
     var msb: UInt64 {

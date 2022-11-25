@@ -76,6 +76,8 @@ extension AdventOfCode2021 {
             var winningBoard: Grid2D = Grid2D()
             var winningBoards: Set<Int> = Set<Int>()
             var winningPlace: Int = place ?? game.count
+            let winningCriteria: [Set<Int>] = [Int].generateRowsAndColumns(for: 5)
+                .map { Set($0) }
                         
             // Identify winning board and call number
             foundBoard: for call in bingo.calls {
@@ -86,7 +88,7 @@ extension AdventOfCode2021 {
                         
                         // It would make sense that the only time a board is candidate to win
                         // is when it has found a match...right?
-                        if AdventOfCode2021.Day04.verify(game[board]) && !winningBoards.contains(board) {
+                        if AdventOfCode2021.Day04.verify(game[board], valid: winningCriteria) && !winningBoards.contains(board) {
                             winningCall = call
                             winningBoard = game[board]
                             winningBoards.insert(board)
@@ -118,27 +120,14 @@ extension AdventOfCode2021 {
             return nil
         }
         
-        static func verify(_ board: Grid2D) -> Bool {
-            let tests: [Set<Int>] = [
-                Set([0, 1, 2, 3, 4]),
-                Set([5, 6, 7, 8, 9]),
-                Set([10, 11, 12, 13, 14]),
-                Set([15, 16, 17, 18, 19]),
-                Set([20, 21, 22, 23, 24]),
-                Set([0, 5, 10, 15, 20]),
-                Set([1, 6, 11, 16, 21]),
-                Set([2, 7, 12, 17, 22]),
-                Set([3, 8, 13, 18, 23]),
-                Set([4, 9, 14, 19, 24]),
-            ]
-            
+        static func verify(_ board: Grid2D, valid: [Set<Int>]) -> Bool {
             // One row has no numbers
-            var matches = Array(board.joined())
+            let matches = Array(board.joined())
                 .enumerated()
                 .filter { $0.element == nil }
                 .map { $0.offset }
                             
-            for test in tests {
+            for test in valid {
                 if test.subtracting(matches).count == 0 {
                     return true
                 }
