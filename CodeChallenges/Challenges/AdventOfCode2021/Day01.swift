@@ -14,16 +14,19 @@ extension AdventOfCode2021 {
         typealias Input = [Int]
         typealias Output = Int
         
+        
         // MARK: - Properties
         var testCases: [TestCase<Input, Output>] = []
         var selectedResourceSets: [String] = []
         var selectedAlgorithms: [Algorithms] = []
+        
         
         // MARK: - Initializers
         init(datasets: [String] = [], algorithms: [Algorithms] = []) {
             self.selectedResourceSets = datasets
             self.selectedAlgorithms = algorithms
         }
+        
         
         // MARK: - Solution Methods
         // Step 1: Assemble
@@ -44,6 +47,7 @@ extension AdventOfCode2021 {
                 return part02(input)
             }
         }
+        
         
         // MARK: - Logic Methods
         func part01(_ depths: Input) -> Output {
