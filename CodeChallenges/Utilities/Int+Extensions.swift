@@ -14,7 +14,7 @@ typealias Coordinate = (x: Int, y: Int)
 // MARK: - Int Methods
 extension Int {
     func bitDensity(using total: Int) -> Int {
-        return (Double(self) >= Double(total)/2).intValue
+        return (Double(total)/2 <= Double(self)).intValue
     }
 }
 

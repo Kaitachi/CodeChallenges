@@ -53,13 +53,8 @@ extension AdventOfCode2021 {
         func part01(_ byteArray: Input) -> Output {
             let mask = byteArray.reduce(0) { $0 | $1 }
 //            let length = String(mask, radix: 2).count
-            let size = byteArray.count
             
-            // Remember: mostSignificantBits[0] is LSB
-            let mostSignificantBits = AdventOfCode2021.Day03.trueBitCount(in: byteArray, mask: mask)
-                .map { String(($0 >= size/2).intValue) }
-                .joined()
-                .binaryUInt64Value
+            let mostSignificantBits = AdventOfCode2021.Day03.mostSignificantBits(byteArray, mask: mask)
             
             let gammaRate: UInt64 = mostSignificantBits
             let epsilonRate: UInt64 = ~gammaRate & mask
@@ -73,62 +68,11 @@ extension AdventOfCode2021 {
         }
         
         func part02(_ byteArray: Input) -> Output {
-            var filtered = byteArray
             let mask = byteArray.reduce(0) { $0 | $1 }
-            let length = String(mask, radix: 2).count
-            var caret: UInt64 = mask.msb
-            
-            var o2Gen: UInt64 = UInt64(0)
-            var co2Scrub: UInt64 = UInt64(0)
-            
-            // Starting from the leftmost position, find MSB for each bit column to determine o2Gen
-            while (0 < caret && 1 < filtered.count) {
-//                print(filtered)
-                
-                let MSB = AdventOfCode2021.Day03.trueBitCount(in: filtered, mask: mask, filter: caret)
-                    .map { String((Double($0) >= Double(filtered.count)/2).intValue) } // Determines MSB for caret position
-                    .joined()
-                    .binaryUInt64Value
-
-//                print("caret:  \(String(caret, radix: 2).leftPadding(toLength: length, withPad: "0", startingAt: 0))")
-//                print("MSB:    \(String(MSB, radix: 2).leftPadding(toLength: length, withPad: "0", startingAt: 0))")
-                
-                filtered = filtered.filter { ($0 & caret) ^ MSB == 0 }
-                
-//                print(filtered)
-//                print()
-                // Move caret to next bit
-                caret = caret >> 1
-            }
-            
-            o2Gen = filtered[0]
-            
-            // Reset variables
-            filtered = byteArray
-            caret = mask.msb
-            
-            // Starting from the leftmost position, find LSB for each bit column to determine co2Scrub
-            while (0 < caret && 1 < filtered.count) {
-//                print(filtered)
-                
-                let LSB = AdventOfCode2021.Day03.trueBitCount(in: filtered, mask: mask, filter: caret)
-                    .map { String((Double($0) >= Double(filtered.count)/2).intValue) } // Determines LSB for caret position
-                    .joined()
-                    .binaryUInt64Value ^ caret
-
-                filtered = filtered.filter { ($0 & caret) ^ LSB == 0 }
-
-//                print("caret:  \(String(caret, radix: 2).leftPadding(toLength: length, withPad: "0", startingAt: 0))")
-//                print("LSB:    \(String(LSB, radix: 2).leftPadding(toLength: length, withPad: "0", startingAt: 0))")
-//                print(filtered)
-//                print()
-                
-                // Move caret to next bit
-                caret = caret >> 1
-            }
-
-            co2Scrub = filtered[0]
-            
+                        
+            let o2Gen = AdventOfCode2021.Day03.filterUInt64List(byteArray, mask: mask, prioritize: 0)[0]
+            let co2Scrub = AdventOfCode2021.Day03.filterUInt64List(byteArray, mask: mask, prioritize: mask)[0]
+                        
 //            print("mask:     \(String(mask, radix: 2))")
 //            print("o2Gen:    \(o2Gen)")
 //            print("co2Scrub: \(co2Scrub)")
@@ -152,9 +96,42 @@ extension AdventOfCode2021 {
                 caret = caret >> 1
             }
             
-//            print("trueBitCount: \(result)")
-            
             return result
+        }
+        
+        static func mostSignificantBits(_ array: Input, mask: UInt64, filter: UInt64? = nil) -> UInt64 {
+            return AdventOfCode2021.Day03.trueBitCount(in: array, mask: mask, filter: filter)
+                .map { String($0.bitDensity(using: array.count)) }
+                .joined()
+                .binaryUInt64Value
+        }
+        
+        static func filterUInt64List(_ array: Input, mask: UInt64, prioritize: UInt64) -> Input {
+            let length = String(mask, radix: 2).count
+            var filtered = array
+            var caret = mask.msb
+            
+            // Starting from the leftmost position, find MSB for each bit column and filter based on current significance
+            while (0 < caret && 1 < filtered.count) {
+//                print(filtered)
+                
+                let MSB = AdventOfCode2021.Day03.mostSignificantBits(filtered, mask: mask, filter: caret)
+        
+                // Numbers XORd
+                filtered = filtered.filter { ($0 & caret) ^ (prioritize & caret) ^ MSB == 0 }
+
+//                print("mask:   \(String(mask, radix: 2).leftPadding(toLength: length, withPad: "0", startingAt: 0))")
+//                print("thing:  \(String(thing, radix: 2).leftPadding(toLength: length, withPad: "0", startingAt: 0))")
+//                print("caret:  \(String(caret, radix: 2).leftPadding(toLength: length, withPad: "0", startingAt: 0))")
+//                print("MSB:    \(String(MSB, radix: 2).leftPadding(toLength: length, withPad: "0", startingAt: 0))")
+//                print(filtered)
+//                print()
+                
+                // Move caret to next bit
+                caret = caret >> 1
+            }
+
+            return filtered
         }
     }
 }
