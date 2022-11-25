@@ -33,7 +33,7 @@ extension AdventOfCode2021 {
         func assemble(_ input: String, _ output: String? = nil) -> (Input, Output?) {
             let depths = input.integerList()
             
-            let increases = Int(output?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "")
+            let increases = output?.integerList()[0]
             
             return (depths, increases)
         }

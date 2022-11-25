@@ -31,13 +31,11 @@ extension AdventOfCode2021 {
         // MARK: - Solution Methods
         // Step 1: Assemble
         func assemble(_ input: String, _ output: String? = nil) -> (Input, Output?) {
-            let directions = input.components(separatedBy: .newlines)
-                .filter { $0 != "" }
-                .map { AdventOfCode2021.Day02.assembleCoordinateDirections(coordinate: $0) }
+            let directions = input.directionalCoordinates()
             
-            let increases = Int(output?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "")
+            let finalPosition = output?.integerList()[0]
             
-            return (directions, increases)
+            return (directions, finalPosition)
         }
         
         // Step 2: Act
@@ -82,32 +80,6 @@ extension AdventOfCode2021 {
             }
             
             return position.x * position.y
-        }
-        
-        
-        // MARK: - Helper Methods
-        typealias Coordinate = (x: Int, y: Int)
-        
-        static func assembleCoordinateDirections(coordinate: String) -> Coordinate {
-            let direction = coordinate.components(separatedBy: " ")
-            
-            switch direction[0] {
-            case "forward":
-                return (x: Int(direction[1])!, y: 0)
-                
-            case "backward":
-                return (x: -1 * Int(direction[1])!, y: 0)
-                
-            case "up":
-                return (x: 0, y: Int(direction[1])!)
-                
-            case "down":
-                return (x: 0, y: -1 * Int(direction[1])!)
-                
-            default:
-                print("Unexpected direction: \(coordinate)")
-                return (x: 0, y: 0)
-            }
         }
     }
 }
