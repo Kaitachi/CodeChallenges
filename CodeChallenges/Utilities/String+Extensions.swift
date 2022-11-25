@@ -9,6 +9,15 @@ import Foundation
 
 // MARK: - String Methods
 extension String {
+    func byteArray() -> [UInt64] {
+        return self.components(separatedBy: .newlines)
+            .compactMap { UInt64($0, radix: 2) }
+    }
+    
+    var binaryUInt64Value: UInt64 {
+        return UInt64(self, radix: 2) ?? 0
+    }
+    
     func directionalCoordinates() -> [Coordinate] {
         return self.components(separatedBy: .newlines)
             .compactMap {
@@ -32,5 +41,9 @@ extension String {
                     return nil
                 }
             }
+    }
+    
+    func leftPadding(toLength: Int, withPad: String, startingAt: Int) -> String {
+        String(String(reversed()).padding(toLength: toLength, withPad: withPad, startingAt: startingAt).reversed())
     }
 }

@@ -16,6 +16,7 @@
 		26DED1C72930EC1900CC168B /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DED1C62930EC1900CC168B /* String+Extensions.swift */; };
 		26DED1C92930EC5D00CC168B /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DED1C82930EC5D00CC168B /* Int+Extensions.swift */; };
 		26DED1CB2930EE2C00CC168B /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DED1CA2930EE2C00CC168B /* Error.swift */; };
+		26DED1CD2930FC2600CC168B /* Bool+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DED1CC2930FC2600CC168B /* Bool+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -52,6 +53,7 @@
 		26DED1C62930EC1900CC168B /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		26DED1C82930EC5D00CC168B /* Int+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
 		26DED1CA2930EE2C00CC168B /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		26DED1CC2930FC2600CC168B /* Bool+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bool+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,6 +147,7 @@
 				26DED1C62930EC1900CC168B /* String+Extensions.swift */,
 				26DED1C82930EC5D00CC168B /* Int+Extensions.swift */,
 				26DED1CA2930EE2C00CC168B /* Error.swift */,
+				26DED1CC2930FC2600CC168B /* Bool+Extensions.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -221,6 +224,7 @@
 				26DED1C92930EC5D00CC168B /* Int+Extensions.swift in Sources */,
 				26DED1C72930EC1900CC168B /* String+Extensions.swift in Sources */,
 				26AB5B7829302E4C002D8A68 /* Day01.swift in Sources */,
+				26DED1CD2930FC2600CC168B /* Bool+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

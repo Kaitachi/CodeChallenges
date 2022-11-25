@@ -11,8 +11,8 @@ import ChallengeBase
 extension AdventOfCode2021 {
     class Day03 : AdventOfCode2021, Solution {
         // MARK: - Type Aliases
-        typealias Input = [String]
-        typealias Output = Int64
+        typealias Input = [UInt64]
+        typealias Output = UInt64
         
         
         // MARK: - Properties
@@ -31,10 +31,9 @@ extension AdventOfCode2021 {
         // MARK: - Solution Methods
         // Step 1: Assemble
         func assemble(_ input: String, _ output: String? = nil) -> (Input, Output?) {
-            let byteArray = input.components(separatedBy: .newlines)
-                .filter { $0 != "" }
+            let byteArray = input.byteArray()
             
-            let powerConsumption = Int64(output?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "")
+            let powerConsumption = UInt64(output?.integerList()[0] ?? 0)
             
             return (byteArray, powerConsumption)
         }
@@ -52,64 +51,48 @@ extension AdventOfCode2021 {
         
         // MARK: - Logic Methods
         func part01(_ byteArray: Input) -> Output {
-            // Calculate the most common bit for each column
-            let commonByteString = AdventOfCode2021.Day03.mostCommonCharacter(in: byteArray)
-                        
-            let gammaRate: UInt16 = UInt16(commonByteString, radix: 2)!
-            let epsilonRate: UInt16 = ~gammaRate & AdventOfCode2021.Day03.getTrailingNBits(n: byteArray.first!.count)
+            let mask = byteArray.reduce(0) { $0 | $1 }
+            let length = String(mask, radix: 2).count
+            let size = byteArray.count
             
-            return Int64(gammaRate) * Int64(epsilonRate)
+            // Remember: mostSignificantBits[0] is LSB
+            let mostSignificantBits = AdventOfCode2021.Day03.trueBitCount(in: byteArray, mask: mask)
+                .map { String(($0 >= size/2).intValue) }
+                .reversed()
+                .joined()
+                .binaryUInt64Value
+            
+            let gammaRate: UInt64 = mostSignificantBits
+            let epsilonRate: UInt64 = ~gammaRate & mask
+
+//            print("mask:      \(String(mask, radix: 2))")
+//            print("bits:      \(String(mostSignificantBits, radix: 2).leftPadding(toLength: length, withPad: "0", startingAt: 0))")
+//            print("gammaRate: \(String(gammaRate, radix: 2).leftPadding(toLength: length, withPad: "0", startingAt: 0)) = \(gammaRate)")
+//            print("epsilRate: \(String(epsilonRate, radix: 2).leftPadding(toLength: length, withPad: "0", startingAt: 0)) = \(epsilonRate)")
+
+            return gammaRate * epsilonRate
         }
         
         func part02(_ directions: Input) -> Output {
-            return -1
+            return 0
         }
         
         
         // MARK: - Helper Methods
-        static func mostCommonCharacter(in array: [String]) -> String {
-            var characterFrequencies: [Int: [Character: Int]] = [Int: [Character: Int]]() // [position: [char: count]]
-            var mostCommonCharacters: [Character] = [Character]()
+        static func trueBitCount(in array: Input, mask: UInt64) -> [Int] {
+            var result: [Int] = [Int]()
+            var position: UInt64 = UInt64(1)
             
-            // For each line,
-            for line in array {
-                // Add one to the current count of each character
-                for char in Array(line).enumerated() {
-                    // Initialize offset if it does not exist
-                    if characterFrequencies[char.offset] == nil {
-                        characterFrequencies[char.offset] = [Character: Int]()
-                    }
-                    
-                    // Initialize character for this offset if it does not exist
-                    if characterFrequencies[char.offset]![char.element] == nil {
-                        characterFrequencies[char.offset]![char.element] = 0
-                    }
-                    
-                    // Since we have already made sure that all indices exist, we can force unwrap these guys
-                    characterFrequencies[char.offset]![char.element]! += 1
-                }
+            // Starting from the rightmost position, count the bits that are "true"
+            while (0 < mask & position && position <= mask) {
+                let matches = array.filter { $0 & position > 0 }
+                result.append(matches.count)
+                                
+                // Move position to next bit
+                position = position << 1
             }
-                        
-            // Sort dictionary keys before doing anything else
-            let charactersByOffset = characterFrequencies
-                .sorted { $0.key < $1.key }
-                .map { $0.value }
-                        
-            // Iterate through our dictionary to obtain the most common character for each offset
-            for characters in charactersByOffset {
-                // Sort each character list by its count
-                let sorted = characters
-                    .sorted { $0.value > $1.value }
-                    .first!.key
-
-                mostCommonCharacters.append(sorted)
-            }
-                        
-            return String(mostCommonCharacters)
-        }
-        
-        static func getTrailingNBits(n: Int) -> UInt16 {
-            return UInt16(truncating: pow(2, n) as NSDecimalNumber) - 1
+            
+            return result
         }
     }
 }
