@@ -31,7 +31,7 @@ extension AdventOfCode2021 {
         // MARK: - Solution Methods
         // Step 1: Assemble
         func assemble(_ input: String, _ output: String? = nil) -> (Input, Output?) {
-            let directions = input.components(separatedBy: "\n")
+            let directions = input.components(separatedBy: .newlines)
                 .filter { $0 != "" }
                 .map { AdventOfCode2021.Day02.assembleCoordinateDirections(coordinate: $0) }
             
