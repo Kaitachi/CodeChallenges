@@ -16,8 +16,8 @@ extension AdventOfCode2021 {
         
         // MARK: - Properties
         var testCases: [TestCase<Input, Output>] = []
-        var selectedResourceSets: [String]
-        var selectedAlgorithms: [Algorithms]
+        var selectedResourceSets: [String] = []
+        var selectedAlgorithms: [Algorithms] = []
         
         // MARK: - Initializers
         init(datasets: [String] = [], algorithms: [Algorithms] = []) {
