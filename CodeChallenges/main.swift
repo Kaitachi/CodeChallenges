@@ -30,5 +30,5 @@ declaredSolution.execute()
 var day02 = AdventOfCode2021.Day02(datasets: resourceSets, algorithms: [.part01, .part02])
 day02.execute()
 
-var day03 = AdventOfCode2021.Day03(datasets: resourceSets, algorithms: [.part01])
+var day03 = AdventOfCode2021.Day03(datasets: resourceSets, algorithms: [.part01, .part02])
 day03.execute()
