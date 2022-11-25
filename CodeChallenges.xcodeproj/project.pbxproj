@@ -15,7 +15,6 @@
 		26DED1C32930582200CC168B /* Day03.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DED1C22930582200CC168B /* Day03.swift */; };
 		26DED1C72930EC1900CC168B /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DED1C62930EC1900CC168B /* String+Extensions.swift */; };
 		26DED1C92930EC5D00CC168B /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DED1C82930EC5D00CC168B /* Int+Extensions.swift */; };
-		26DED1CB2930EE2C00CC168B /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DED1CA2930EE2C00CC168B /* Error.swift */; };
 		26DED1CD2930FC2600CC168B /* Bool+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DED1CC2930FC2600CC168B /* Bool+Extensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -52,7 +51,6 @@
 		26DED1C22930582200CC168B /* Day03.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day03.swift; sourceTree = "<group>"; };
 		26DED1C62930EC1900CC168B /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		26DED1C82930EC5D00CC168B /* Int+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
-		26DED1CA2930EE2C00CC168B /* Error.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		26DED1CC2930FC2600CC168B /* Bool+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bool+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -87,8 +85,8 @@
 		268C656C2930244600E4E49F /* CodeChallenges */ = {
 			isa = PBXGroup;
 			children = (
-				26DED1C52930EC0100CC168B /* Utilities */,
 				268C65752930266900E4E49F /* Challenges */,
+				26DED1C52930EC0100CC168B /* Utilities */,
 				268C65742930247800E4E49F /* Resources */,
 				268C656D2930244600E4E49F /* main.swift */,
 			);
@@ -146,7 +144,6 @@
 			children = (
 				26DED1C62930EC1900CC168B /* String+Extensions.swift */,
 				26DED1C82930EC5D00CC168B /* Int+Extensions.swift */,
-				26DED1CA2930EE2C00CC168B /* Error.swift */,
 				26DED1CC2930FC2600CC168B /* Bool+Extensions.swift */,
 			);
 			path = Utilities;
@@ -216,7 +213,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				26DED1CB2930EE2C00CC168B /* Error.swift in Sources */,
 				26AB5B7629302D28002D8A68 /* AdventOfCode2021.swift in Sources */,
 				268C656E2930244600E4E49F /* main.swift in Sources */,
 				26CF2A392930451B00AE18C2 /* Day02.swift in Sources */,
