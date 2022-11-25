@@ -18,6 +18,7 @@ enum AdventOfCode2021_Algorithms : String, CaseIterable {
 enum AdventOfCode2021_Solutions : String, CaseIterable {
     case Day01
     case Day02
+    case Day03
 }
 
 class AdventOfCode2021 : Challenge {
@@ -32,6 +33,8 @@ class AdventOfCode2021 : Challenge {
             return AdventOfCode2021.Day01()
         case .Day02:
             return AdventOfCode2021.Day02()
+        case .Day03:
+            return AdventOfCode2021.Day03()
         }
     }
     
