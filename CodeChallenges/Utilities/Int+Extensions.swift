@@ -9,6 +9,7 @@ import Foundation
 
 // MARK: - Type Aliases
 typealias Coordinate = (x: Int, y: Int)
+typealias Vector = (start: Coordinate, end: Coordinate)
 typealias Grid2D = [[Int?]]
 
 
@@ -22,7 +23,7 @@ extension Int {
 
 // MARK: - [Int] Methods
 extension [Int] {
-    static func generateRowsAndColumns(for size: Int) -> [[Int]] {
+    static func orthogonalIndices(for size: Int) -> [[Int]] {
         let rows = stride(from: 0, to: size * size, by: size)
             .map { start in
                 return Array(stride(from: start, to: start + size, by: 1))

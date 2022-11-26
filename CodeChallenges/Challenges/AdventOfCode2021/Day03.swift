@@ -30,7 +30,9 @@ extension AdventOfCode2021 {
         // MARK: - Solution Methods
         // Step 1: Assemble
         func assemble(_ input: String, _ output: String? = nil) -> (Input, Output?) {
-            let byteArray = input.byteArray()
+            let byteArray = input
+                .components(separatedBy: .newlines)
+                .compactMap { $0.binaryValue }
             
             let powerConsumption = UInt64(output?.integerList()[0] ?? 0)
             
@@ -102,7 +104,7 @@ extension AdventOfCode2021 {
             return AdventOfCode2021.Day03.trueBitCount(in: array, mask: mask, filter: filter)
                 .map { String($0.bitDensity(using: array.count)) }
                 .joined()
-                .binaryUInt64Value
+                .binaryValue!
         }
         
         static func filterUInt64List(_ array: Input, mask: UInt64, prioritize: UInt64) -> Input {

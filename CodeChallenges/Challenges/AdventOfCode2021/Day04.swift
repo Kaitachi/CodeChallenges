@@ -76,7 +76,7 @@ extension AdventOfCode2021 {
             var winningBoard: Grid2D = Grid2D()
             var winningBoards: Set<Int> = Set<Int>()
             var winningPlace: Int = place ?? game.count
-            let winningCriteria: [Set<Int>] = [Int].generateRowsAndColumns(for: 5)
+            let winningCriteria: [Set<Int>] = [Int].orthogonalIndices(for: 5)
                 .map { Set($0) }
                         
             // Identify winning board and call number

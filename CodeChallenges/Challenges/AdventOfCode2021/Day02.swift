@@ -30,7 +30,9 @@ extension AdventOfCode2021 {
         // MARK: - Solution Methods
         // Step 1: Assemble
         func assemble(_ input: String, _ output: String? = nil) -> (Input, Output?) {
-            let directions = input.directionalCoordinates()
+            let directions = input
+                .components(separatedBy: .newlines)
+                .compactMap { $0.directionalCoordinate }
             
             let finalPosition = output?.integerList()[0]
             
