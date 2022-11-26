@@ -35,6 +35,29 @@ extension String {
         }
     }
     
+    var cartesianCoordinate: Coordinate? {
+        let components = self.components(separatedBy: .punctuationCharacters)
+            .compactMap { Int($0) }
+        
+        if components.count != 2 {
+            return nil
+        }
+        
+        return (x: components[0], y: components[1])
+    }
+    
+    var vectorValue: Vector? {
+        let components = self.components(separatedBy: "->")
+            .compactMap { $0.trimmingCharacters(in: .whitespaces) }
+            .compactMap { $0.cartesianCoordinate }
+        
+        if components.count != 2 {
+            return nil
+        }
+        
+        return (start: components[0], end: components[1])
+    }
+    
     func leftPadding(toLength: Int, withPad: String, startingAt: Int) -> String {
         String(String(reversed()).padding(toLength: toLength, withPad: withPad, startingAt: startingAt).reversed())
     }

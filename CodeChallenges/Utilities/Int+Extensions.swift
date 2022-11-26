@@ -13,6 +13,14 @@ typealias Vector = (start: Coordinate, end: Coordinate)
 typealias Grid2D = [[Int?]]
 
 
+// MARK: - Enumerations
+enum Direction {
+    case horizontal
+    case vertical
+    case diagonal
+}
+
+
 // MARK: - Int Methods
 extension Int {
     func bitDensity(using total: Int) -> Int {
