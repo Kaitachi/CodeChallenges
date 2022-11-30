@@ -41,8 +41,8 @@ extension AdventOfCode2021 {
             return (vectors, formattedOutput)
         }
         
-        // Step 2: Act
-        func act(_ input: Input, algorithm: Algorithms) -> Output {
+        // Step 2: Activate
+        func activate(_ input: Input, algorithm: Algorithms) -> Output {
             switch algorithm {
             case .part01:
                 return part01(input)
