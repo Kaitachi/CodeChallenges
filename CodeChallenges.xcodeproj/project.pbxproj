@@ -18,6 +18,7 @@
 		26DED1C92930EC5D00CC168B /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DED1C82930EC5D00CC168B /* Int+Extensions.swift */; };
 		26DED1CD2930FC2600CC168B /* Bool+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DED1CC2930FC2600CC168B /* Bool+Extensions.swift */; };
 		26EB967B29317CF3004C3E0F /* Day05.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EB967A29317CF3004C3E0F /* Day05.swift */; };
+		26EB9696293821ED004C3E0F /* AdventOfCode2022.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EB9695293821ED004C3E0F /* AdventOfCode2022.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -64,6 +65,8 @@
 		26EB967829317CB8004C3E0F /* Day05.example.part01.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = Day05.example.part01.out; sourceTree = "<group>"; };
 		26EB967929317CD4004C3E0F /* Day05.example.part02.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = Day05.example.part02.out; sourceTree = "<group>"; };
 		26EB967A29317CF3004C3E0F /* Day05.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Day05.swift; sourceTree = "<group>"; };
+		26EB9695293821ED004C3E0F /* AdventOfCode2022.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdventOfCode2022.swift; sourceTree = "<group>"; };
+		26EB969729382231004C3E0F /* .gitkeep */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitkeep; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +111,7 @@
 		268C65742930247800E4E49F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				26EB9693293821C1004C3E0F /* AdventOfCode2022 */,
 				26AB5B7029302CBE002D8A68 /* AdventOfCode2021 */,
 			);
 			path = Resources;
@@ -116,6 +120,7 @@
 		268C65752930266900E4E49F /* Challenges */ = {
 			isa = PBXGroup;
 			children = (
+				26EB9694293821C9004C3E0F /* AdventOfCode2022 */,
 				26AB5B6F29302CB4002D8A68 /* AdventOfCode2021 */,
 			);
 			path = Challenges;
@@ -169,6 +174,22 @@
 				26DED1CC2930FC2600CC168B /* Bool+Extensions.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		26EB9693293821C1004C3E0F /* AdventOfCode2022 */ = {
+			isa = PBXGroup;
+			children = (
+				26EB969729382231004C3E0F /* .gitkeep */,
+			);
+			path = AdventOfCode2022;
+			sourceTree = "<group>";
+		};
+		26EB9694293821C9004C3E0F /* AdventOfCode2022 */ = {
+			isa = PBXGroup;
+			children = (
+				26EB9695293821ED004C3E0F /* AdventOfCode2022.swift */,
+			);
+			path = AdventOfCode2022;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -241,6 +262,7 @@
 				26DED1C32930582200CC168B /* Day03.swift in Sources */,
 				26DED1C92930EC5D00CC168B /* Int+Extensions.swift in Sources */,
 				26EB967B29317CF3004C3E0F /* Day05.swift in Sources */,
+				26EB9696293821ED004C3E0F /* AdventOfCode2022.swift in Sources */,
 				26DED1C72930EC1900CC168B /* String+Extensions.swift in Sources */,
 				26AB5B7829302E4C002D8A68 /* Day01.swift in Sources */,
 				26DED1CD2930FC2600CC168B /* Bool+Extensions.swift in Sources */,
