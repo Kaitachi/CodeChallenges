@@ -54,18 +54,24 @@ extension AdventOfCode2022 {
         
         // MARK: - Logic Methods
         func part01(_ elves: Input) -> Output {
-            let calorieCount: [Int] = elves
-                .compactMap { $0.reduce(0, +) }
-                            
-            let mostCalories: Int = calorieCount
+            let mostCalories: [Int] = AdventOfCode2022.Day01.calorieCount(elves)
                 .sorted(by: > )
-                .first!
 
-            return mostCalories
+            return mostCalories.first!
         }
         
-        func part02(_ inputData: Input) -> Output {
-            return -1
+        func part02(_ elves: Input) -> Output {
+            let topThreeCalories: [Int] = Array(AdventOfCode2022.Day01.calorieCount(elves)
+                .sorted(by: > )[..<3])
+            
+            return topThreeCalories.reduce(0, +)
+        }
+        
+        
+        static func calorieCount(_ elves: Input) -> [Int] {
+            // Get Calorie Count for each Elf
+            return elves
+                .compactMap { $0.reduce(0, +) }
         }
     }
 }
