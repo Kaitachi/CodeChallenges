@@ -31,12 +31,12 @@ extension AdventOfCode2021 {
         
         // MARK: - Solution Methods
         // Step 1: Assemble
-        func assemble(_ input: String, _ output: String? = nil) -> (Input, Output?) {
-            let vectors = input
+        func assemble(_ rawInput: String, _ rawOutput: String? = nil) -> (Input, Output?) {
+            let vectors = rawInput
                 .components(separatedBy: .newlines)
                 .compactMap { $0.vectorValue }
             
-            let formattedOutput = output?.integerList()[0]
+            let formattedOutput = rawOutput?.integerList()[0]
             
             return (vectors, formattedOutput)
         }

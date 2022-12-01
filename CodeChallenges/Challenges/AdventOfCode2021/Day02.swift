@@ -29,12 +29,12 @@ extension AdventOfCode2021 {
         
         // MARK: - Solution Methods
         // Step 1: Assemble
-        func assemble(_ input: String, _ output: String? = nil) -> (Input, Output?) {
-            let directions = input
+        func assemble(_ rawInput: String, _ rawOutput: String? = nil) -> (Input, Output?) {
+            let directions = rawInput
                 .components(separatedBy: .newlines)
                 .compactMap { $0.directionalCoordinate }
             
-            let finalPosition = output?.integerList()[0]
+            let finalPosition = rawOutput?.integerList()[0]
             
             return (directions, finalPosition)
         }

@@ -31,11 +31,11 @@ extension AdventOfCode2021 {
         
         // MARK: - Solution Methods
         // Step 1: Assemble
-        func assemble(_ input: String, _ output: String? = nil) -> (Input, Output?) {
+        func assemble(_ rawInput: String, _ rawOutput: String? = nil) -> (Input, Output?) {
             var calls: [Int]? = nil
             var boards: [Grid2D] = [Grid2D]()
                         
-            for section in input.components(separatedBy: "\n\n") {
+            for section in rawInput.components(separatedBy: "\n\n") {
                 if calls == nil {
                     calls = section.integerList(separatedBy: .punctuationCharacters)
                 } else {
@@ -43,7 +43,7 @@ extension AdventOfCode2021 {
                 }
             }
             
-            let finalScore = output?.integerList()[0]
+            let finalScore = rawOutput?.integerList()[0]
             
             return ((calls: calls!, boards: boards), finalScore)
         }

@@ -29,12 +29,12 @@ extension AdventOfCode2021 {
         
         // MARK: - Solution Methods
         // Step 1: Assemble
-        func assemble(_ input: String, _ output: String? = nil) -> (Input, Output?) {
-            let byteArray = input
+        func assemble(_ rawInput: String, _ rawOutput: String? = nil) -> (Input, Output?) {
+            let byteArray = rawInput
                 .components(separatedBy: .newlines)
                 .compactMap { $0.binaryValue }
             
-            let powerConsumption = UInt64(output?.integerList()[0] ?? 0)
+            let powerConsumption = UInt64(rawOutput?.integerList()[0] ?? 0)
             
             return (byteArray, powerConsumption)
         }
