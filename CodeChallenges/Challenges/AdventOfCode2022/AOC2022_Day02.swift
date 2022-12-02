@@ -134,9 +134,9 @@ extension AdventOfCode2022 {
             let myTool = myTools[me]!
             
             // determine who won
-            let outcome = resolve[playedTools(opp: oppTool, me: myTool)]!.rawValue
+            let roundOutcome = resolve[playedTools(opp: oppTool, me: myTool)]!
 
-            return outcome + myTool.rawValue
+            return roundOutcome.rawValue + myTool.rawValue
         }
         
         static func figureRound(_ opp: String, _ outcome: String) -> Int {
