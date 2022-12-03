@@ -37,6 +37,7 @@ extension AdventOfCode2022 {
                     let compartmentIndex = line.index(line.startIndex, offsetBy: line.count / 2)
                     return (l: String(line[..<compartmentIndex]), r: String(line[compartmentIndex...]))
                 }
+                //.filter { $0 != [] }
             
             let formattedOutput = rawOutput?.integerList()[0]
             
@@ -55,12 +56,12 @@ extension AdventOfCode2022 {
         
         
         // MARK: - Logic Methods
-        func part01(_ rucksacks: Input) -> Output {
+        func part01(_ elves: Input) -> Output {
             var result: Int = 0
             
             fillItemValues()
             
-            for rucksack in rucksacks {
+            for rucksack in elves {
                 if let commonItem = Set(rucksack.l).intersection(Set(rucksack.r)).first {
 //                    print("[\(commonItem)]: \(itemValue[commonItem, default: 0])")
                     result += itemValue[commonItem, default: 0]
@@ -70,8 +71,23 @@ extension AdventOfCode2022 {
             return result
         }
         
-        func part02(_ inputData: Input) -> Output {
-            return -1
+        func part02(_ elves: Input) -> Output {
+            var result: Int = 0
+            
+            fillItemValues()
+            
+            for triplet in stride(from: 0, to: elves.count - 1, by: 3) {
+                let elf0 = Set(elves[triplet + 0].l).union(Set(elves[triplet + 0].r))
+                let elf1 = Set(elves[triplet + 1].l).union(Set(elves[triplet + 1].r))
+                let elf2 = Set(elves[triplet + 2].l).union(Set(elves[triplet + 2].r))
+                
+                if let commonItem = elf0.intersection(elf1).intersection(elf2).first {
+//                    print("[\(commonItem)]: \(itemValue[commonItem, default: 0])")
+                    result += itemValue[commonItem, default: 0]
+                }
+            }
+            
+            return result
         }
         
         
