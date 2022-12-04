@@ -87,7 +87,24 @@ extension AdventOfCode2022 {
         }
         
         func part02(_ inputData: Input) -> Output {
-            return -1
+            var overlappingAssignments: Int = 0
+//            print(inputData)
+            
+            for line in inputData {
+                let assign1: Set<Int> = Set(line.elf1[0]...line.elf1[1])
+                let assign2: Set<Int> = Set(line.elf2[0]...line.elf2[1])
+                
+//                print("=====")
+//                print(assign1)
+//                print(assign2)
+                
+                let isOverlap1: Bool = !assign1.intersection(assign2).isEmpty
+                let isOverlap2: Bool = !assign2.intersection(assign1).isEmpty
+                
+                overlappingAssignments += (isOverlap1 || isOverlap2) ? 1 : 0
+            }
+            
+            return overlappingAssignments
         }
     }
 }
