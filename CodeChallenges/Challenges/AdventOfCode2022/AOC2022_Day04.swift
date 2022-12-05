@@ -99,9 +99,8 @@ extension AdventOfCode2022 {
 //                print(assign2)
                 
                 let isOverlap1: Bool = !assign1.intersection(assign2).isEmpty
-                let isOverlap2: Bool = !assign2.intersection(assign1).isEmpty
                 
-                overlappingAssignments += (isOverlap1 || isOverlap2) ? 1 : 0
+                overlappingAssignments += (isOverlap1) ? 1 : 0
             }
             
             return overlappingAssignments
