@@ -58,8 +58,6 @@ extension AdventOfCode2022 {
         
         // MARK: - Logic Methods
         func part01(_ inputData: Input) -> Output {
-            var result: String = ""
-            
             var supplies = inputData.field
             
             // Last item is the topmost; first item is bottommost
@@ -74,22 +72,26 @@ extension AdventOfCode2022 {
             
 //            print(supplies)
             
-            // Gather first letter from each array
-            for index in supplies.keys.sorted(by: < ) {
-                let box = supplies[index]!.removeLast()
-                    .replacing(/\[(\w)\]/) { match in
-                        return match.1
-                    }
-                
-//                print(box)
-                result.append(box)
-            }
-            
-            return result
+            return AdventOfCode2022.Day05.getTopBoxes(from: supplies)
         }
         
         func part02(_ inputData: Input) -> Output {
-            return ""
+            var supplies = inputData.field
+                        
+            // Last item is the topmost; first item is bottommost
+            for instruction in inputData.instructions {
+                let index = supplies[instruction.source]!.count - instruction.count
+                
+                for _ in 1...instruction.count {
+//                    print("move \(instruction.count) from \(instruction.source) to \(instruction.target)")
+                    
+                    supplies[instruction.target]!.append(supplies[instruction.source]!.remove(at: index))
+                }
+            }
+            
+//            print(supplies)
+            
+            return AdventOfCode2022.Day05.getTopBoxes(from: supplies)
         }
         
         
@@ -151,6 +153,23 @@ extension AdventOfCode2022 {
             }
             
             return nil
+        }
+        
+        static func getTopBoxes(from field: BoxField) -> String {
+            var result: String = ""
+            
+            // Gather first letter from each array
+            for index in field.keys.sorted(by: < ) {
+                let box = field[index]!.last!
+                    .replacing(/\[(\w)\]/) { match in
+                        return match.1
+                    }
+                
+//                print(box)
+                result.append(box)
+            }
+            
+            return result
         }
     }
 }
