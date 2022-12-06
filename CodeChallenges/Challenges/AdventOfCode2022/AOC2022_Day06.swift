@@ -52,33 +52,27 @@ extension AdventOfCode2022 {
         
         // MARK: - Logic Methods
         func part01(_ signal: Input) -> Output {
-            for i in 0..<(signal.count-4) {
-                let startMarker = signal.index(signal.startIndex, offsetBy: i)
-                let endMarker = signal.index(signal.startIndex, offsetBy: i + 3)
-                
-//                print(signal[startMarker...endMarker])
-                
-                if Set(signal[startMarker...endMarker]).count == 4 {
-                    return i + 4
-                }
-            }
-            
-            return -1
+            return AdventOfCode2022.Day06.findFirstUniqueSubstring(for: signal, length: 4) ?? -1
         }
         
         func part02(_ signal: Input) -> Output {
-            for i in 0..<(signal.count-14) {
+            return AdventOfCode2022.Day06.findFirstUniqueSubstring(for: signal, length: 14) ?? -1
+        }
+        
+        
+        // MARK: - Helper Methods
+        static func findFirstUniqueSubstring(for signal: String, length: Int) -> Int? {
+            for i in 0..<(signal.count-length) {
                 let startMarker = signal.index(signal.startIndex, offsetBy: i)
-                let endMarker = signal.index(signal.startIndex, offsetBy: i + 13)
-                
-//                print(signal[startMarker...endMarker])
-                
-                if Set(signal[startMarker...endMarker]).count == 14 {
-                    return i + 14
+                let endMarker = signal.index(signal.startIndex, offsetBy: i + length - 1)
+                                
+                if Set(signal[startMarker...endMarker]).count == length {
+                    return i + length
                 }
             }
             
-            return -1
+            // Unique substring not found
+            return nil
         }
     }
 }
