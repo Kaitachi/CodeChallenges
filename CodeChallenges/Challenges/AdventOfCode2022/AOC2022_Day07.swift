@@ -61,38 +61,34 @@ extension AdventOfCode2022 {
         // MARK: - Logic Methods
         func part01(_ inputData: Input) -> Output {
             let fileSystemTree = AdventOfCode2022.Day07.buildTree(with: inputData)
-            
-            var underweightDirs: [FileSystemItem] = [FileSystemItem]()
-            
-            var directories: [FileSystemItem] = [FileSystemItem]()
-            var cursor: FileSystemItem? = fileSystemTree
                         
-            repeat {
-                if let children = cursor?.children as? [FileSystemItem] {
-                    for child in children {
-                        if child.isDirectory {
-                            directories.append(child)
-                            
-                            if child.weight <= 100000 {
-                                underweightDirs.append(child)
-                            }
-                        }
-                    }
-                }
-                
-                cursor = directories.removeFirst()
-            } while (0 < directories.count)
-            
-            return underweightDirs.reduce(0) { $0 + $1.weight }
+            return AdventOfCode2022.Day07.flatten(tree: fileSystemTree)
+                .filter { $0.isDirectory && $0.weight <= 100_000 }
+                .reduce(0) { $0 + $1.weight }
         }
         
         func part02(_ inputData: Input) -> Output {
-            return -1
+            let fileSystemTree = AdventOfCode2022.Day07.buildTree(with: inputData)
+            let availableSpace = AdventOfCode2022.Day07.getAvailableSpace(from: fileSystemTree)
+            let neededSpace = AdventOfCode2022.Day07.targetAvailableSpace - availableSpace
+            
+//            print("total size: \(fileSystemTree.weight)")
+//            print("available space: \(availableSpace)")
+//            print("need to delete: \(neededSpace)")
+            
+            return AdventOfCode2022.Day07.flatten(tree: fileSystemTree)
+                .filter { $0.isDirectory && neededSpace <= $0.weight }
+                .map { $0.weight }
+                .sorted(by: < )
+                .first!
         }
         
         
         // MARK: - Helper Methods
         typealias Command = (command: String, output: [String]?)
+        
+        static let diskSize: Int = 70_000_000
+        static let targetAvailableSpace: Int = 30_000_000
         
         enum CommandName {
             case cd(String)
@@ -210,6 +206,32 @@ extension AdventOfCode2022 {
             default:
                 throw CommandError.invalidCommand
             }
+        }
+        
+        static func flatten(tree: FileSystemItem) -> [FileSystemItem] {
+            var items: [FileSystemItem] = [FileSystemItem]()
+            var remainingDirectories: [FileSystemItem] = [FileSystemItem]()
+            var cursor: FileSystemItem? = tree
+
+            repeat {
+                if let children = cursor?.children as? [FileSystemItem] {
+                    for child in children {
+                        items.append(child)
+
+                        if child.isDirectory {
+                            remainingDirectories.append(child)
+                        }
+                    }
+                }
+                
+                cursor = remainingDirectories.removeFirst()
+            } while (0 < remainingDirectories.count)
+
+            return items
+        }
+        
+        static func getAvailableSpace(from tree: FileSystemItem) -> Int {
+            return diskSize - tree.weight
         }
     }
 }
