@@ -58,21 +58,23 @@ extension AdventOfCode2022 {
         // MARK: - Logic Methods
         func part01(_ inputData: Input) -> Output {
             let overgrowths = AdventOfCode2022.Day08.showTreeOvergrowth(for: inputData)
-            let totalTrees = inputData.count * inputData[0].count
             
-            let exposedTrees = overgrowths.map { row in
+            return overgrowths.map { row in
                 row.map { tree in
                     return (tree <= 0) ? 0 : 1
                 }
                 .reduce(0, +)
             }
             .reduce(0, +)
-                        
-            return exposedTrees
         }
         
         func part02(_ inputData: Input) -> Output {
-            return -1
+            let scenes = AdventOfCode2022.Day08.showTreeScenery(for: inputData)
+            
+            return scenes.map { row in
+                row.reduce(0) { max($0, $1) }
+            }
+            .reduce(0) { max($0, $1) }
         }
         
         
@@ -88,7 +90,7 @@ extension AdventOfCode2022 {
 //            for (index, row) in gridRows.enumerated() {
 //                print("gridRow[\(index)]: \(row)")
 //            }
-//            
+//
 //            for (index, col) in gridCols.enumerated() {
 //                print("gridCol[\(index)]: \(col)")
 //            }
@@ -134,6 +136,85 @@ extension AdventOfCode2022 {
 //            }
             
             return overgrowths
+        }
+        
+        static func showTreeScenery(for grid: Input) -> [[Int]] {
+            var scenes: [[Int]] = grid
+            
+            let gridRows = grid
+            let gridCols = grid.enumerated().map { (index, _) in
+                return grid.map { $0[index] }
+            }
+            
+//            for (index, row) in gridRows.enumerated() {
+//                print("gridRow[\(index)]: \(row)")
+//            }
+//
+//            for (index, col) in gridCols.enumerated() {
+//                print("gridCol[\(index)]: \(col)")
+//            }
+            
+            for (row, rowElement) in scenes.enumerated() {
+                for (col, colElement) in rowElement.enumerated() {
+                    let N = Array(gridCols[col][0..<row].reversed())
+                    let S = gridCols[col][(row + 1)..<(gridCols.count)]
+                    let W = Array(gridRows[row][0..<col].reversed())
+                    let E = gridRows[row][(col + 1)..<(gridRows.count)]
+                    
+//                    print("element: \(colElement)")
+//                    print("grid[\(row)][\(col)] -> N: \(N); S: \(S); W: \(W); E: \(E)")
+                    
+                    var thingN: Int = N.count
+                    if let firstTallTreeIndex = N.firstIndex { colElement <= $0 } {
+                        thingN = N.distance(from: N.startIndex, to: firstTallTreeIndex) + 1
+                    }
+
+                    var thingS: Int = S.count
+                    if let firstTallTreeIndex = S.firstIndex { colElement <= $0 } {
+                        thingS = S.distance(from: S.startIndex, to: firstTallTreeIndex) + 1
+                    }
+
+                    var thingW: Int = W.count
+                    if let firstTallTreeIndex = W.firstIndex { colElement <= $0 } {
+                        thingW = W.distance(from: W.startIndex, to: firstTallTreeIndex) + 1
+                    }
+
+                    var thingE: Int = E.count
+                    if let firstTallTreeIndex = E.firstIndex { colElement <= $0 } {
+                        thingE = E.distance(from: E.startIndex, to: firstTallTreeIndex) + 1
+                    }
+
+                    let orthogonalScenes = [thingN, thingS, thingW, thingE]
+
+                    
+                    scenes[row][col] = orthogonalScenes.reduce(1, * )
+
+//                    print("> firstTallTreeN: \(thingN)")
+//                    print("> firstTallTreeS: \(thingS)")
+//                    print("> firstTallTreeW: \(thingW)")
+//                    print("> firstTallTreeE: \(thingE)")
+//                    print("> views of [\(colElement)] -> N: \(viewN); S: \(viewS); W: \(viewW); E: \(viewE)")
+//                    print("> exposed amount for [\(colElement)]: \(scenes[row][col])")
+                    
+//                    print()
+                }
+            }
+            
+//            print()
+//            print()
+//
+//            for row in grid {
+//                print(row)
+//            }
+//
+//            print()
+//            print()
+//
+//            for row in scenes {
+//                print(row)
+//            }
+            
+            return scenes
         }
     }
 }
