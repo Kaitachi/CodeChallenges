@@ -57,7 +57,6 @@ extension AdventOfCode2022 {
             let strength_measures: [Int] = Array(stride(from: 20, through: 220, by: 40))
             
             let strength: Int = AdventOfCode2022.Day10.execute(program: instructions)
-                .map { (cycle: $0.cycle + 1, value: $0.value)} // Weird workaround to make both solutions work simultaneously...
                 .filter { strength_measures.contains($0.cycle) } // Can we calculate strength for this cycle?
                 .reduce(0) { $0 + ($1.cycle * $1.value)}
             
@@ -65,13 +64,12 @@ extension AdventOfCode2022 {
         }
         
         func part02(_ instructions: Input) -> Output {
-            let history = AdventOfCode2022.Day10.execute(program: instructions)
+            let history = AdventOfCode2022.Day10.execute(program: instructions, from: 0)
             let screenWidth = 40
             let screenHeight = 6
             let pixelDeviation = 1 // How much spread does the pixel have (in this problem, +/- 1)
             
             return history
-                .filter { $0.cycle < screenWidth * screenHeight } // Weird workaround to make both solutions work simultaneously...
                 .map { (cycle: $0.cycle,
                         value: $0.value,
                         column: $0.cycle % screenWidth)
@@ -111,11 +109,11 @@ extension AdventOfCode2022 {
             }
         }
         
-        static func execute(program: [Instruction]) -> [Register] {
+        static func execute(program: [Instruction], from step: Int = 1, for ticks: Int = 240) -> [Register] {
             var instructions = program
             var memory_history: [Register] = [Register]()
             var queue: [Int] = [] // FIFO queue with Values to be added, offset by 2 (hence the zeros to begin with)
-            var memory: Register = (cycle: 0, value: 1) // Cycle number and value at end of associated cycle
+            var memory: Register = (cycle: step, value: 1) // Cycle number and value at end of associated cycle
                
 //            print(memory)
 
@@ -144,7 +142,9 @@ extension AdventOfCode2022 {
 //                print(memory)
             } while (!instructions.isEmpty || !queue.isEmpty)
             
-            memory_history.append(memory)
+            if (memory_history.count < ticks) {
+                memory_history.append(memory)
+            }
             
             return memory_history
         }
