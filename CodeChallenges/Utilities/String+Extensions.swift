@@ -57,7 +57,7 @@ extension String {
         
         return (start: components[0], end: components[1])
     }
-    
+        
     func leftPadding(toLength: Int, withPad: String, startingAt: Int) -> String {
         String(String(reversed()).padding(toLength: toLength, withPad: withPad, startingAt: startingAt).reversed())
     }

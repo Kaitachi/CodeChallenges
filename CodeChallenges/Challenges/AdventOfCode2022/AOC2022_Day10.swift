@@ -63,8 +63,43 @@ extension AdventOfCode2022 {
             return [String(strength)]
         }
         
-        func part02(_ inputData: Input) -> Output {
-            return [String(-99)]
+        func part02(_ instructions: Input) -> Output {
+            let history = AdventOfCode2022.Day10.execute(program: instructions)
+            let line_measures: [Int] = Array(stride(from: 0, through: 220, by: 40))
+            let pixelDeviation = 1 // How much spread does the pixel have (in this problem, +/- 1)
+            
+//            for item in history {
+//                print(item)
+//            }
+            
+            let mapped = history.map { (cycle: $0.cycle, value: $0.value, column: $0.cycle % 40) }
+                .map { (cycle: $0.cycle, value: $0.value, column: $0.column, paint: (abs($0.value - $0.column) <= pixelDeviation) ? "#" : ".") }
+            
+            for line in mapped {
+                print(line)
+            }
+            
+            let strand = mapped.map { $0.paint }
+                .joined()
+            
+            let screen = line_measures.map {
+                let startIndex = strand.index(strand.startIndex, offsetBy: $0)
+                let endIndex = strand.index(startIndex, offsetBy: 40, limitedBy: strand.endIndex) ?? strand.endIndex
+                return String(strand[startIndex..<endIndex])
+            }
+            
+            print(line_measures[0])
+            
+            print(strand)
+            print()
+            
+            for line in screen {
+                print(line)
+            }
+            
+            print()
+            
+            return screen
         }
         
         
@@ -95,11 +130,13 @@ extension AdventOfCode2022 {
             var instructions = program
             var memory_history: [Register] = [Register]()
             var queue: [Int] = [] // FIFO queue with Values to be added, offset by 2 (hence the zeros to begin with)
-            var memory: Register = (cycle: 1, value: 1) // Cycle number and value at end of associated cycle
+            var memory: Register = (cycle: 0, value: 1) // Cycle number and value at end of associated cycle
                
 //            print(memory)
 
             repeat {
+                memory_history.append(memory)
+                
                 // BEGIN CYCLE
                 
                 // Read instruction and insert Value to queue
@@ -118,7 +155,7 @@ extension AdventOfCode2022 {
                 
                 // END CYCLE
                 memory = (cycle: memory.cycle + 1, value: memory.value + queue.removeFirst())
-                memory_history.append(memory)
+                
 //                print(memory)
             } while (!instructions.isEmpty || !queue.isEmpty)
             
