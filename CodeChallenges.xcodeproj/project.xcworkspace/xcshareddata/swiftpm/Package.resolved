@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kaitachi/ChallengeBase",
       "state" : {
-        "revision" : "471a578c4d1f6f27e9d26fcdb9b479544f3b96d2",
-        "version" : "0.1.16"
+        "revision" : "3eef12e43422015d4af51d8dcfdfdf6cc6247378",
+        "version" : "0.1.18"
       }
     }
   ],

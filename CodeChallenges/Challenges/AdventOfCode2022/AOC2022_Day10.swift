@@ -13,7 +13,7 @@ extension AdventOfCode2022 {
     class Day10 : AdventOfCode2022, Solution {
         // MARK: - Type Aliases
         typealias Input = [Instruction]
-        typealias Output = Int
+        typealias Output = [String]
         
         
         // MARK: - Properties
@@ -35,7 +35,8 @@ extension AdventOfCode2022 {
             let formattedInput = rawInput.components(separatedBy: .newlines)
                 .compactMap { AdventOfCode2022.Day10.readInstruction($0) }
             
-            let formattedOutput = rawOutput?.integerList()[0]
+            let formattedOutput = rawOutput?.components(separatedBy: .newlines)
+                .filter { !$0.isEmpty }
             
             return (formattedInput, formattedOutput)
         }
@@ -53,18 +54,53 @@ extension AdventOfCode2022 {
         
         // MARK: - Logic Methods
         func part01(_ instructions: Input) -> Output {
-            var instructions = instructions
-            
             let strength_measures: [Int] = Array(stride(from: 20, through: 220, by: 40))
+            
+            let strength: Int = AdventOfCode2022.Day10.execute(program: instructions)
+                .filter { strength_measures.contains($0.cycle) } // Can we calculate strength for this cycle?
+                .reduce(0) { $0 + ($1.cycle * $1.value)}
+            
+            return [String(strength)]
+        }
+        
+        func part02(_ inputData: Input) -> Output {
+            return [String(-99)]
+        }
+        
+        
+        // MARK: - Helper Methods
+        enum Instruction {
+            case noop
+            case addx(Int)
+        }
+        
+        typealias Register = (cycle: Int, value: Int)
+        
+        static func readInstruction(_ line: String) -> Instruction? {
+            let components = line.components(separatedBy: .whitespaces)
+            
+            switch components[0] {
+            case "noop":
+                return Instruction.noop
+                
+            case "addx":
+                return Instruction.addx(Int(components[1])!)
+                
+            default:
+                return nil
+            }
+        }
+        
+        static func execute(program: [Instruction]) -> [Register] {
+            var instructions = program
+            var memory_history: [Register] = [Register]()
             var queue: [Int] = [] // FIFO queue with Values to be added, offset by 2 (hence the zeros to begin with)
-            var memory_x: Registry = (cycle: 1, value: 1) // Cycle number and value at end of associated cycle
-            var strength: Int = 0
+            var memory: Register = (cycle: 1, value: 1) // Cycle number and value at end of associated cycle
                
-//            print(memory_x)
+//            print(memory)
 
             repeat {
                 // BEGIN CYCLE
-//                print(list)
                 
                 // Read instruction and insert Value to queue
                 if !instructions.isEmpty {
@@ -81,47 +117,12 @@ extension AdventOfCode2022 {
                 }
                 
                 // END CYCLE
-                memory_x = (cycle: memory_x.cycle + 1, value: memory_x.value + queue.removeFirst())
-                
-                // Can we calculate strength for this cycle?
-                if strength_measures.contains(memory_x.cycle) {
-//                    print(memory_x)
-                    
-                    strength += memory_x.cycle * memory_x.value
-                }
-                
-//                print(memory_x)
+                memory = (cycle: memory.cycle + 1, value: memory.value + queue.removeFirst())
+                memory_history.append(memory)
+//                print(memory)
             } while (!instructions.isEmpty || !queue.isEmpty)
             
-            return strength
-        }
-        
-        func part02(_ inputData: Input) -> Output {
-            return -99
-        }
-        
-        
-        // MARK: - Helper Methods
-        enum Instruction {
-            case noop
-            case addx(Int)
-        }
-        
-        typealias Registry = (cycle: Int, value: Int)
-        
-        static func readInstruction(_ line: String) -> Instruction? {
-            let components = line.components(separatedBy: .whitespaces)
-            
-            switch components[0] {
-            case "noop":
-                return Instruction.noop
-                
-            case "addx":
-                return Instruction.addx(Int(components[1])!)
-                
-            default:
-                return nil
-            }
+            return memory_history
         }
     }
 }

@@ -125,6 +125,7 @@
 		26EB96E32944AD70004C3E0F /* Day10.mini.in */ = {isa = PBXFileReference; lastKnownFileType = text; path = Day10.mini.in; sourceTree = "<group>"; };
 		26EB96E42944AD8F004C3E0F /* AOC2022_Day10.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AOC2022_Day10.swift; sourceTree = "<group>"; };
 		26EB96E62944AE0D004C3E0F /* Day10.mini.part01.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = Day10.mini.part01.out; sourceTree = "<group>"; };
+		26EB96E82944BFB9004C3E0F /* ChallengeBase */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ChallengeBase; path = ../ChallengeBase; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +143,7 @@
 		268C65612930244600E4E49F = {
 			isa = PBXGroup;
 			children = (
+				26EB96E72944BFB9004C3E0F /* Packages */,
 				268C656C2930244600E4E49F /* CodeChallenges */,
 				268C656B2930244600E4E49F /* Products */,
 			);
@@ -296,6 +298,14 @@
 				26EB96E42944AD8F004C3E0F /* AOC2022_Day10.swift */,
 			);
 			path = AdventOfCode2022;
+			sourceTree = "<group>";
+		};
+		26EB96E72944BFB9004C3E0F /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				26EB96E82944BFB9004C3E0F /* ChallengeBase */,
+			);
+			name = Packages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
