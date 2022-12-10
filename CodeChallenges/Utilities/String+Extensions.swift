@@ -57,7 +57,17 @@ extension String {
         
         return (start: components[0], end: components[1])
     }
-        
+    
+    // Kudos to @Ondrej Stocek from StackOverflow for the following function!
+    // https://stackoverflow.com/a/40741560
+    func grid(columns length: Int) -> [String] {
+        return stride(from: 0, to: self.count, by: length).map {
+            let startIndex = self.index(self.startIndex, offsetBy: $0)
+            let endIndex = self.index(startIndex, offsetBy: length, limitedBy: self.endIndex) ?? self.endIndex
+            return String(self[startIndex..<endIndex])
+        }
+    }
+    
     func leftPadding(toLength: Int, withPad: String, startingAt: Int) -> String {
         String(String(reversed()).padding(toLength: toLength, withPad: withPad, startingAt: startingAt).reversed())
     }

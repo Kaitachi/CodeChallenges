@@ -57,6 +57,7 @@ extension AdventOfCode2022 {
             let strength_measures: [Int] = Array(stride(from: 20, through: 220, by: 40))
             
             let strength: Int = AdventOfCode2022.Day10.execute(program: instructions)
+                .map { (cycle: $0.cycle + 1, value: $0.value)} // Weird workaround to make both solutions work simultaneously...
                 .filter { strength_measures.contains($0.cycle) } // Can we calculate strength for this cycle?
                 .reduce(0) { $0 + ($1.cycle * $1.value)}
             
@@ -65,41 +66,25 @@ extension AdventOfCode2022 {
         
         func part02(_ instructions: Input) -> Output {
             let history = AdventOfCode2022.Day10.execute(program: instructions)
-            let line_measures: [Int] = Array(stride(from: 0, through: 220, by: 40))
+            let screenWidth = 40
+            let screenHeight = 6
             let pixelDeviation = 1 // How much spread does the pixel have (in this problem, +/- 1)
             
-//            for item in history {
-//                print(item)
-//            }
-            
-            let mapped = history.map { (cycle: $0.cycle, value: $0.value, column: $0.cycle % 40) }
-                .map { (cycle: $0.cycle, value: $0.value, column: $0.column, paint: (abs($0.value - $0.column) <= pixelDeviation) ? "#" : ".") }
-            
-            for line in mapped {
-                print(line)
-            }
-            
-            let strand = mapped.map { $0.paint }
+            return history
+                .filter { $0.cycle < screenWidth * screenHeight } // Weird workaround to make both solutions work simultaneously...
+                .map { (cycle: $0.cycle,
+                        value: $0.value,
+                        column: $0.cycle % screenWidth)
+                }
+                .map { (cycle: $0.cycle,
+                        value: $0.value,
+                        column: $0.column,
+                        paint: (abs($0.value - $0.column) <= pixelDeviation) ? "#" : ".")
+                }
+//                .map { line in print(line); return line }
+                .map { $0.paint }
                 .joined()
-            
-            let screen = line_measures.map {
-                let startIndex = strand.index(strand.startIndex, offsetBy: $0)
-                let endIndex = strand.index(startIndex, offsetBy: 40, limitedBy: strand.endIndex) ?? strand.endIndex
-                return String(strand[startIndex..<endIndex])
-            }
-            
-            print(line_measures[0])
-            
-            print(strand)
-            print()
-            
-            for line in screen {
-                print(line)
-            }
-            
-            print()
-            
-            return screen
+                .grid(columns: screenWidth)
         }
         
         
@@ -158,6 +143,8 @@ extension AdventOfCode2022 {
                 
 //                print(memory)
             } while (!instructions.isEmpty || !queue.isEmpty)
+            
+            memory_history.append(memory)
             
             return memory_history
         }
