@@ -59,45 +59,15 @@ extension AdventOfCode2022 {
         
         // MARK: - Logic Methods
         func part01(_ monkeys: Input) -> Output {
-            var monkeys = monkeys
             let rounds: Int = 20
+            let worry: (Int) -> Int = { item in item / 3 }
             
-//            print("=== INITIAL STATE ===")
-//            for monkey in monkeys {
-//                print(monkey)
-//            }
-//
-//            print()
-//            print()
-
-            for round in 1...rounds {
-                
-                for index in 0..<monkeys.count {
-                    while (!monkeys[index].items.isEmpty) {
-                        let item = monkeys[index].inspect()
-                        monkeys[item.giveTo].receive(item.item)
-                    }
-                }
-                
-//                print("=== ROUND \(round) ===")
-//
-//                for monkey in monkeys {
-//                    print(monkey)
-//                }
-//
-//                print()
-//                print()
-            }
-            
-//            for monkey in monkeys {
-//                print("Monkey \(monkey.id) inspected \(monkey.inspections) times.")
-//            }
-            
-            monkeys = monkeys.sorted { $0.inspections > $1.inspections}
-            
-//            print(monkeys)
-            
-            return monkeys[0].inspections * monkeys[1].inspections
+            return AdventOfCode2022.Day11.play(with: monkeys, for: rounds, worry: worry)
+                .sorted { $0.inspections > $1.inspections }
+                .enumerated()
+                .filter { $0.offset < 2 }
+                .compactMap { $0.element.inspections }
+                .reduce(1, *)
         }
         
         func part02(_ inputData: Input) -> Output {
@@ -166,22 +136,20 @@ extension AdventOfCode2022 {
 //                print()
             }
             
-            mutating func inspect() -> (item: Int, giveTo: Int) {
+            mutating func inspect(_ worry: (Int) -> Int) -> (item: Int, giveTo: Int) {
 //                print("Monkey \(id) is inspecting!")
                 
                 let item: [String: Int] = ["old": self.items.removeFirst()]
                 let new: Int = NSExpression(format: self.operation).expressionValue(with: item, context: nil) as! Int
-                let worry: Int = new / 3
-                let isDivisible: Bool = ((worry % self.testDivisor) == 0)
+                let isDivisible: Bool = ((worry(new) % self.testDivisor) == 0)
                 let giveTo: Int = isDivisible ? self.whenTrue : self.whenFalse
                 
 //                print("Handling item \(item)...")
 //                print("New item value \(new)")
-//                print("Worry level at \(worry)")
 //                print("\(worry) divisible by \(self.testDivisor)? \(isDivisible)")
 
                 self.inspections += 1
-                return (item: worry, giveTo: giveTo)
+                return (item: worry(new), giveTo: giveTo)
             }
             
             mutating func receive(_ item: Int) {
@@ -191,6 +159,26 @@ extension AdventOfCode2022 {
             var description: String {
                 return "Monkey \(self.id): \(self.items)"
             }
+        }
+        
+        static func play(with monkeys: Input, for rounds: Int, worry: (Int) -> Int) -> Input {
+            var monkeys = monkeys
+            
+            for round in 1...rounds {
+                for index in 0..<monkeys.count {
+                    while (!monkeys[index].items.isEmpty) {
+                        let item = monkeys[index].inspect(worry)
+                        monkeys[item.giveTo].receive(item.item)
+                    }
+                }
+                
+                print("=== ROUND \(round) ===")
+                for monkey in monkeys {
+                    print("Monkey \(monkey.id) inspected \(monkey.inspections) times.")
+                }
+            }
+
+            return monkeys
         }
     }
 }
