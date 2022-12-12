@@ -68,7 +68,11 @@ extension String {
         }
     }
     
-    func leftPadding(toLength: Int, withPad: String, startingAt: Int) -> String {
-        String(String(reversed()).padding(toLength: toLength, withPad: withPad, startingAt: startingAt).reversed())
+    func evaluate(with dictionary: Any?) -> Any? {
+        return NSExpression(format: self).expressionValue(with: dictionary, context: nil)
+    }
+    
+    func leftPadding(toLength length: Int, withPad padding: String, startingAt position: Int) -> String {
+        String(String(reversed()).padding(toLength: length, withPad: padding, startingAt: position).reversed())
     }
 }

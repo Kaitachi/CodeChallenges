@@ -14,7 +14,7 @@ extension AdventOfCode2022 {
     class Day11 : AdventOfCode2022, Solution {
         // MARK: - Type Aliases
         typealias Input = [Monkey]
-        typealias Output = Int
+        typealias Output = Int64
         
         
         // MARK: - Properties
@@ -41,7 +41,8 @@ extension AdventOfCode2022 {
 //                print(monkey)
 //            }
             
-            let formattedOutput = rawOutput?.integerList()[0]
+            let formattedOutput = Int64(rawOutput?.components(separatedBy: .newlines)[0] ?? "")
+                
             
             return (formattedInput, formattedOutput)
         }
@@ -66,12 +67,20 @@ extension AdventOfCode2022 {
                 .sorted { $0.inspections > $1.inspections }
                 .enumerated()
                 .filter { $0.offset < 2 }
-                .compactMap { $0.element.inspections }
+                .compactMap { Int64($0.element.inspections) }
                 .reduce(1, *)
         }
         
-        func part02(_ inputData: Input) -> Output {
-            return -1
+        func part02(_ monkeys: Input) -> Output {
+            let rounds: Int = 1
+            let worry: (Int) -> Int = { item in item / 3 }
+            
+            return AdventOfCode2022.Day11.play(with: monkeys, for: rounds, worry: worry)
+                .sorted { $0.inspections > $1.inspections }
+                .enumerated()
+                .filter { $0.offset < 2 }
+                .compactMap { Int64($0.element.inspections) }
+                .reduce(1, *)
         }
         
         
@@ -140,13 +149,14 @@ extension AdventOfCode2022 {
 //                print("Monkey \(id) is inspecting!")
                 
                 let item: [String: Int] = ["old": self.items.removeFirst()]
-                let new: Int = NSExpression(format: self.operation).expressionValue(with: item, context: nil) as! Int
+                let new: Int = self.operation.evaluate(with: item) as! Int
                 let isDivisible: Bool = ((worry(new) % self.testDivisor) == 0)
                 let giveTo: Int = isDivisible ? self.whenTrue : self.whenFalse
                 
-//                print("Handling item \(item)...")
-//                print("New item value \(new)")
-//                print("\(worry) divisible by \(self.testDivisor)? \(isDivisible)")
+                print("Handling item \(item)...")
+                print("New item value \(new)")
+                print("\(worry(new)) divisible by \(self.testDivisor)? \(isDivisible)")
+                print()
 
                 self.inspections += 1
                 return (item: worry(new), giveTo: giveTo)
@@ -172,9 +182,12 @@ extension AdventOfCode2022 {
                     }
                 }
                 
-                print("=== ROUND \(round) ===")
-                for monkey in monkeys {
-                    print("Monkey \(monkey.id) inspected \(monkey.inspections) times.")
+                if [1, 20, rounds].contains(round) {
+                    print("=== ROUND \(round) ===")
+                    for monkey in monkeys {
+                        print("Monkey \(monkey.id) inspected \(monkey.inspections) times.")
+                    }
+                    print()
                 }
             }
 
