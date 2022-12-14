@@ -59,19 +59,47 @@ extension AdventOfCode2022 {
         
         // MARK: - Logic Methods
         func part01(_ heightmap: Input) -> Output {
-//            print("heightmap:")
-//            heightmap.describe()
-            
             let start: Cell2DIndex = heightmap.index(of: MapMarker.start.rawValue)!
             let target: Cell2DIndex = heightmap.index(of: MapMarker.target.rawValue)!
+
+            return AdventOfCode2022.Day12.shortestDistance(from: start, to: target, in: heightmap)!
+        }
+        
+        func part02(_ heightmap: Input) -> Output {
+            let target: Cell2DIndex = heightmap.index(of: MapMarker.target.rawValue)!
             
+            return heightmap.indices(of: "a").compactMap { start in
+                AdventOfCode2022.Day12.shortestDistance(from: start, to: target, in: heightmap)
+            }
+            .reduce(Int.max) { min($0, $1) }
+        }
+        
+        
+        // MARK: - Helper Methods
+        enum MapMarker: String {
+            case start = "S" // transforms to 96 in intMap
+            case target = "E" // transforms to 123 in intMap
+        }
+        
+        enum NodeVisit: String {
+            case unvisited = "."
+            case north = "^"
+            case south = "v"
+            case east = ">"
+            case west = "<"
+        }
+        
+        static func shortestDistance(from start: Cell2DIndex, to goal: Cell2DIndex, in heightmap: Input) -> Int? {
+//            print("heightmap:")
+//            heightmap.describe()
+                        
             var levelmap: [[Int]] = heightmap.map { line in
                 line.map { Int(Character($0).asciiValue!) }
             }
             
             // Change values for start and target positions (to make our logic somewhat easier)
             levelmap[start.row][start.col] = Int(Character("a").asciiValue!)
-            levelmap[target.row][target.col] = Int(Character("z").asciiValue!)
+            levelmap[goal.row][goal.col] = Int(Character("z").asciiValue!)
             
 //            print("levelmap:")
 //            levelmap.describe()
@@ -136,54 +164,15 @@ extension AdventOfCode2022 {
                 // Overwrite locations to visit
                 locationsToVisit = newLocations
             }
-            
-//            levelmap.describe()
-            
-//            print(levelmap.described)
-//            print(visitmap.described)
-
-            print(target)
-//            visitmap.map { row in
-//                row.map { $0 ?? -1 }
-//            }
-//                .forEach { print($0) }
-            
-            print("journey: \(visitmap[target.row][target.col])")
-            
-//            for row in visitmap.enumerated() {
-//                for col in row.element.enumerated() {
-//                    print("point  \(col.offset) ,  \(row.offset) :  \(col.element?.values.first! ?? -1)")
-//                }
-//            }
-
-                        
-            if let journey = visitmap[target.row][target.col] {
+                                                
+            if let journey = visitmap[goal.row][goal.col] {
                 return journey.values.first!.value
             } else {
                 // Something went wrong...
-                print("cell: \(visitmap[target.row][target.col])")
+//                print("cell: \(visitmap[goal.row][goal.col])")
                 
-                return -1
+                return nil
             }
-        }
-        
-        func part02(_ inputData: Input) -> Output {
-            return -1
-        }
-        
-        
-        // MARK: - Helper Methods
-        enum MapMarker: String {
-            case start = "S" // transforms to 96 in intMap
-            case target = "E" // transforms to 123 in intMap
-        }
-        
-        enum NodeVisit: String {
-            case unvisited = "."
-            case north = "^"
-            case south = "v"
-            case east = ">"
-            case west = "<"
         }
     }
 }

@@ -28,18 +28,21 @@ extension Array where Element: Collection & CustomStringConvertible,
     }
     
     func index(of value: Element.Element) -> Cell2DIndex? {
-            self.map { row in
-                row.firstIndex(of: value)
+        self.indices(of: value).first
+    }
+    
+    func indices(of value: Element.Element) -> [Cell2DIndex] {
+        self.map { row in
+            row.firstIndex(of: value)
+        }
+        .enumerated()
+        .compactMap { row in
+            guard let element = row.element else {
+                return nil
             }
-            .enumerated()
-            .compactMap { row in
-                guard let element = row.element else {
-                    return nil
-                }
-                
-                return (row: row.offset, col: element)
-            }
-            .first
+            
+            return (row: row.offset, col: element)
+        }
     }
     
     // Overlap given kernel over certain section of our matrix

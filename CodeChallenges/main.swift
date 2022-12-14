@@ -56,5 +56,5 @@ let resourceSets = ["example"]
 //var day11 = AdventOfCode2022.Day11(datasets: ["example"], algorithms: [.part02])
 //day11.execute()
 
-var day12 = AdventOfCode2022.Day12(datasets: ["example"], algorithms: [.part01])
+var day12 = AdventOfCode2022.Day12(datasets: ["example"], algorithms: [.part02])
 day12.execute()
