@@ -12,7 +12,7 @@ import ChallengeBase
 extension AdventOfCode2021 {
     class Day04 : AdventOfCode2021, Solution {
         // MARK: - Type Aliases
-        typealias Input = (calls: [Int], boards: [Grid2D])
+        typealias Input = (calls: [Int], boards: [Matrix2D])
         typealias Output = Int
         
         
@@ -33,7 +33,7 @@ extension AdventOfCode2021 {
         // Step 1: Assemble
         func assemble(_ rawInput: String, _ rawOutput: String? = nil) -> (Input, Output?) {
             var calls: [Int]? = nil
-            var boards: [Grid2D] = [Grid2D]()
+            var boards: [Matrix2D] = [Matrix2D]()
                         
             for section in rawInput.components(separatedBy: "\n\n") {
                 if calls == nil {
@@ -71,9 +71,9 @@ extension AdventOfCode2021 {
         
         // MARK: - Helper Methods
         static func startGame(_ bingo: Input, winning place: Int? = nil) -> Int {
-            var game: [Grid2D] = bingo.boards
+            var game: [Matrix2D] = bingo.boards
             var winningCall: Int = Int()
-            var winningBoard: Grid2D = Grid2D()
+            var winningBoard: Matrix2D = Matrix2D()
             var winningBoards: Set<Int> = Set<Int>()
             var winningPlace: Int = place ?? game.count
             let winningCriteria: [Set<Int>] = [Int].orthogonalIndices(for: 5)
@@ -84,7 +84,7 @@ extension AdventOfCode2021 {
                 for board in 0 ..< game.count {
                     if let match = AdventOfCode2021.Day04.call(number: call, in: game[board]) {
                         // Remove cell contents
-                        game[board][match.y][match.x] = nil
+                        game[board][match.y][match.x] = -1
                         
                         // It would make sense that the only time a board is candidate to win
                         // is when it has found a match...right?
@@ -110,7 +110,7 @@ extension AdventOfCode2021 {
             return remainingSum * winningCall
         }
         
-        static func call(number call: Int, in board: Grid2D) -> Coordinate? {
+        static func call(number call: Int, in board: Matrix2D) -> Coordinate? {
             let dimensions: Coordinate = (x: board.count, y: board[0].count)
             
             if let index = Array(board.joined()).firstIndex(of: call) {
@@ -120,11 +120,11 @@ extension AdventOfCode2021 {
             return nil
         }
         
-        static func verify(_ board: Grid2D, valid: [Set<Int>]) -> Bool {
+        static func verify(_ board: Matrix2D, valid: [Set<Int>]) -> Bool {
             // One row has no numbers
             let matches = Array(board.joined())
                 .enumerated()
-                .filter { $0.element == nil }
+                .filter { $0.element < 0 }
                 .map { $0.offset }
                             
             for test in valid {

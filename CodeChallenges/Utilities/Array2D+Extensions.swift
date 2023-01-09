@@ -67,8 +67,8 @@ extension Array where Element: Collection & CustomStringConvertible,
                 
 //                print("convolving at (\(row), \(col))")
                 pairs.append((
-                    matrix: Cell2D(row: row, col: col, value: self[row][col]),
-                    kernel: Cell2D(row: i, col: j, value: k_cell)
+                    matrix: Cell2D(row: row, col: col, item: self[row][col]),
+                    kernel: Cell2D(row: i, col: j, item: k_cell)
                 ))
             }
         }
@@ -78,23 +78,10 @@ extension Array where Element: Collection & CustomStringConvertible,
 }
 
 
-struct Cell2D<T: Hashable>: Equatable & Hashable {
-    var row: Int
-    var col: Int
-    var value: T?
-    
-    public init(row: Int, col: Int, value: T? = nil) {
-        self.row = row
-        self.col = col
-        self.value = value
-    }
-}
-
-
 // MARK: - Convolution Algorithms
 struct Convolutions {
     static let standard: ([KernelMapping<Int, Int>]) -> Int = { pairs in
-        pairs.map { ($0.matrix.value ?? 0) * ($0.kernel.value ?? 0) }.reduce(0, +)
+        pairs.map { ($0.matrix.item ?? 0) * ($0.kernel.item ?? 0) }.reduce(0, +)
     }
 }
 

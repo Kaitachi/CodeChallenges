@@ -74,6 +74,13 @@ extension AdventOfCode2021 {
         
         
         // MARK: - Helper Methods
+        enum Direction {
+            case horizontal
+            case vertical
+            case diagonal
+        }
+        
+        
         static func direction(for vector: Vector) -> Direction {
             if vector.start.y == vector.end.y {
                 return .horizontal

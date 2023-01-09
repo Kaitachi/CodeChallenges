@@ -10,21 +10,23 @@ import Foundation
 // MARK: - Type Aliases
 typealias Coordinate = (x: Int, y: Int)
 typealias Vector = (start: Coordinate, end: Coordinate)
-typealias Grid2D = [[Int?]]
-
-
-// MARK: - Enumerations
-enum Direction {
-    case horizontal
-    case vertical
-    case diagonal
-}
 
 
 // MARK: - Int Methods
 extension Int {
     func bitDensity(using total: Int) -> Int {
         return (Double(total)/2 <= Double(self)).intValue
+    }
+    
+    var length: Int {
+        get {
+            guard self != 0 else {
+                return 1
+            }
+            let sgn: Int = (self > 0) ? 0 : 1
+            
+            return 1 + Int(log(Double(abs(self)))/log(Double(10))) + sgn
+        }
     }
 }
 

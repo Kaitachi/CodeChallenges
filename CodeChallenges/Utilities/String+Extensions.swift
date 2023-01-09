@@ -13,6 +13,7 @@ extension String {
         return UInt64(self, radix: 2)
     }
     
+    // TODO: Remove this method! (used in AOC2021 Day 02)
     var directionalCoordinate: Coordinate? {
         let direction = self.components(separatedBy: .whitespaces)
         
@@ -74,5 +75,32 @@ extension String {
     
     func leftPadding(toLength length: Int, withPad padding: String, startingAt position: Int) -> String {
         String(String(reversed()).padding(toLength: length, withPad: padding, startingAt: position).reversed())
+    }
+    
+    func cardinalDirection(default steps: Int = 1, directions: [String: CardinalDirection] = CardinalDirection.defaults) -> Direction? {
+        let parts = self.components(separatedBy: .whitespaces)
+                
+        guard parts.count > 0,
+              !parts[0].isEmpty else {
+            return nil
+        }
+    
+        // Determine how many steps to go in this direction
+        let steps = (parts.count > 1)
+            ? (Int(parts[1]) ?? steps)
+            : steps
+    
+        // Determine direction to go
+        switch directions[parts[0], default: .unknown] {
+        case .N: return .North(amount: steps)
+        case .NE: return .NorthEast(amount: steps)
+        case .E: return .East(amount: steps)
+        case .SE: return .SouthEast(amount: steps)
+        case .S: return .South(amount: steps)
+        case .SW: return .SouthWest(amount: steps)
+        case .W: return .West(amount: steps)
+        case .NW: return .NorthWest(amount: steps)
+        default: return .unknown
+        }
     }
 }
