@@ -104,7 +104,7 @@ extension AdventOfCode2022 {
 //            print("levelmap:")
 //            levelmap.describe()
             
-            var visitmap: [[[String: Cell]?]] = heightmap.map { line in
+            var visitmap: [[[String: Cell2D<Int>]?]] = heightmap.map { line in
                 line.map { cell in return nil }
             }
             
@@ -127,16 +127,16 @@ extension AdventOfCode2022 {
                     let currentLevel: Int = levelmap[cursor.row][cursor.col]
 //                    print("> [\(i)] Convolving at location \(cursor)\n\n")
                     
-                    let currentCell: Cell = Cell(row: cursor.row, col: cursor.col, value: i)
+                    let currentCell: Cell2D<Int> = Cell2D(row: cursor.row, col: cursor.col, value: i)
                     
                     visitmap[cursor.row][cursor.col] = [currentLetter: currentCell]
                     
-                    var candidates = levelmap.convolve(with: Kernels.taxicab, at: cursor) { pairs in
+                    let candidates = levelmap.convolve(with: Kernels.taxicab, at: cursor) { pairs in
                         pairs.map { (matrix: $0, kernel: $1) }
 //                            .map { pair in print("convolved pair: \(pair)"); return pair }
-                            .filter { pair in pair.kernel.value == 1 } // Masking to obtain legal locations only
+                            .filter { pair in pair.kernel.value! == 1 } // Masking to obtain legal locations only
                             .filter { pair in visitmap[pair.matrix.row][pair.matrix.col] == nil } // Gathering list of unvisited places
-                            .filter { pair in (pair.matrix.value - currentLevel) <= 1 } // Moving only to places where height is one number taller or less
+                            .filter { pair in (pair.matrix.value! - currentLevel) <= 1 } // Moving only to places where height is one number taller or less
                     }
         
 //                    print("Candidate locations to move next:")

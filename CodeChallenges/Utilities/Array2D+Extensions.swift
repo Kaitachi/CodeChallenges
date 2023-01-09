@@ -8,16 +8,16 @@
 import Foundation
 
 // MARK: - Type Aliases
+typealias Matrix2D = [[Int]]
 typealias Cell2DIndex = (row: Int, col: Int)
-typealias Cell2D<T> = (row: Int, col: Int, value: T)
-typealias KernelMapping<T, U> = (matrix: Cell2D<T>, kernel: Cell2D<U>)
+typealias KernelMapping<T: Hashable, U: Hashable> = (matrix: Cell2D<T>, kernel: Cell2D<U>)
 
 
 // MARK: - Array2D Extension
 // This might be the weirdest extension youve ever seen...
 extension Array where Element: Collection & CustomStringConvertible,
                       Element.Index == Int,
-                      Element.Element: Equatable {
+                      Element.Element: Equatable & Hashable {
     
     var size: Int {
         return self.count * self[0].count
@@ -67,8 +67,8 @@ extension Array where Element: Collection & CustomStringConvertible,
                 
 //                print("convolving at (\(row), \(col))")
                 pairs.append((
-                    matrix: (row: row, col: col, value: self[row][col]),
-                    kernel: (row: i, col: j, value: k_cell)
+                    matrix: Cell2D(row: row, col: col, value: self[row][col]),
+                    kernel: Cell2D(row: i, col: j, value: k_cell)
                 ))
             }
         }
@@ -78,24 +78,30 @@ extension Array where Element: Collection & CustomStringConvertible,
 }
 
 
-struct Cell: Equatable {
+struct Cell2D<T: Hashable>: Equatable & Hashable {
     var row: Int
     var col: Int
-    var value: Int
+    var value: T?
+    
+    public init(row: Int, col: Int, value: T? = nil) {
+        self.row = row
+        self.col = col
+        self.value = value
+    }
 }
 
 
 // MARK: - Convolution Algorithms
 struct Convolutions {
     static let standard: ([KernelMapping<Int, Int>]) -> Int = { pairs in
-        pairs.map { $0.matrix.value * $0.kernel.value }.reduce(0, +)
+        pairs.map { ($0.matrix.value ?? 0) * ($0.kernel.value ?? 0) }.reduce(0, +)
     }
 }
 
 
-// MARK: - ConvolutionKernels
+// MARK: - Convolution Kernels
 struct Kernels {
-    static var standard: [[Int]] {
+    static var standard: Matrix2D {
         [
             [1, 1, 1],
             [1, 0, 1],
@@ -103,7 +109,7 @@ struct Kernels {
         ]
     }
     
-    static var taxicab: [[Int]] {
+    static var taxicab: Matrix2D {
         [
             [0, 1, 0],
             [1, 0, 1],
