@@ -153,7 +153,7 @@ extension AdventOfCode2022 {
                     (matrix: Kernels.horizontal, type: .primary),
                     (matrix: Kernels.vertical, type: .primary),
                     (matrix: Kernels.dpad, type: .secondary)
-                     ])
+                ])
                 
                 self.canvas.items.formUnion([
                     Cell2D<Int>(at: head, item: Rope.H.rawValue),

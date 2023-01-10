@@ -148,4 +148,12 @@ struct Kernels {
             [0, 3, 0]
         ]
     }
+    
+    static var gravity: Matrix2D {
+        [
+            [10, 20, 15],
+            [0, 5, 0],
+            [0, 0, 0]
+        ]
+    }
 }

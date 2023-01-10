@@ -52,9 +52,9 @@ public struct Grid2D<T: Hashable & Equatable> {
     var items: Set<Cell2D<T>>
     var kernels: [(matrix: Matrix2D, type: KernelType)]
     
-    init(with kernels: [(matrix: Matrix2D, type: KernelType)]) {
+    init(with kernels: [(matrix: Matrix2D, type: KernelType)]? = nil) {
         self.items = Set<Cell2D<T>>()
-        self.kernels = kernels
+        self.kernels = kernels ?? [(matrix: Matrix2D, type: KernelType)]()
     }
     
     func convolve(single kernel: Matrix2D, at point: Cell2DIndex, defaultValue: Int = 0) -> Int {
@@ -83,7 +83,7 @@ public struct Grid2D<T: Hashable & Equatable> {
         var results = [Cell2D<Int>]()
         
         self.kernels
-            .filter { $0.type == type }
+            .filter { type == nil || $0.type == type }
             .forEach { kernel in
             var projection = Kernels.zeros
             
@@ -114,7 +114,10 @@ public struct Grid2D<T: Hashable & Equatable> {
             let largestColNum: Int = [from.col.length, to.col.length].max()!
             
             stride(from: from.col, through: to.col, by: 1)
-                .map { Array(String(format: "%\(largestColNum)d", $0)) }
+                .map { $0 % 5 == 0
+                    ? Array(String(format: "%\(largestColNum)d", $0))
+                    : Array(String(repeating: " ", count: largestColNum))
+                }
                 .transposed()
                 .forEach { line in
                     print(String(repeating: " ", count: leftPad), terminator: "")
