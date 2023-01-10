@@ -44,13 +44,20 @@ struct Cell2D<T: Equatable & Hashable>: GridCell2D & Equatable & Hashable {
 
 // MARK: - Grid2D
 public struct Grid2D<T: Hashable & Equatable> {
-    var items: Set<Cell2D<T>>
-    
-    init() {
-        self.items = Set<Cell2D<T>>()
+    enum KernelType {
+        case primary
+        case secondary
     }
     
-    func convolve(with kernel: Matrix2D, at point: Cell2DIndex, defaultValue: Int = 0) -> Int {
+    var items: Set<Cell2D<T>>
+    var kernels: [(matrix: Matrix2D, type: KernelType)]
+    
+    init(with kernels: [(matrix: Matrix2D, type: KernelType)]) {
+        self.items = Set<Cell2D<T>>()
+        self.kernels = kernels
+    }
+    
+    func convolve(single kernel: Matrix2D, at point: Cell2DIndex, defaultValue: Int = 0) -> Int {
         var result: Int = 0
 
         for k_row in 0..<kernel.count {
@@ -70,6 +77,33 @@ public struct Grid2D<T: Hashable & Equatable> {
         // print("result: \(result)")
         
         return result
+    }
+    
+    func convolved(around center: Cell2DIndex, of type: KernelType? = nil) -> [Cell2D<Int>] {
+        var results = [Cell2D<Int>]()
+        
+        self.kernels
+            .filter { $0.type == type }
+            .forEach { kernel in
+            var projection = Kernels.zeros
+            
+            // search tiles around given point
+            for row in 0..<projection.count {
+                for col in 0..<projection[0].count {
+                    let coord: Cell2DIndex = (row: center.row + row - 1, col: center.col + col - 1)
+                    
+                    projection[row][col] = self.convolve(single: kernel.matrix, at: coord)
+                }
+            }
+            
+            projection.enumerated().forEach { i, row in
+                row.enumerated().forEach { j, cell in
+                    results.append(Cell2D<Int>(at: (row: i, col: j), item: cell))
+                }
+            }
+        }
+        
+        return results
     }
     
     func described(from: Cell2DIndex, to: Cell2DIndex, showIndices: Bool = false, textProvider text: ([Cell2D<T>]) -> String) {

@@ -29,3 +29,18 @@ extension Array {
         return self.removeFirst()
     }
 }
+
+
+extension Array where Element: Equatable & Hashable {
+    func allIndices(of value: Element) -> [Int] {
+        indices.filter { self[$0] == value }
+    }
+    
+    func sortedByFrequency() -> [Element] {
+        let frequencies = self.reduce(into: [Element:Int]()) { currentResult, element in
+            currentResult[element, default: 0] += 1
+        }
+        
+        return self.sorted(by: { current, next in frequencies[current]! < frequencies[next]! })
+    }
+}

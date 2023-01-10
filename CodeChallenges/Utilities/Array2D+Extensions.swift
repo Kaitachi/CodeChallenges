@@ -33,16 +33,21 @@ extension Array where Element: Collection & CustomStringConvertible,
     
     func indices(of value: Element.Element) -> [Cell2DIndex] {
         self.map { row in
-            row.firstIndex(of: value)
+            row.enumerated()
+                .filter { $0.element == value }
+                .map { $0.offset }
         }
         .enumerated()
         .compactMap { row in
-            guard let element = row.element else {
-                return nil
+            var indices: [Cell2DIndex] = [Cell2DIndex]()
+                        
+            for element in row.element {
+                indices.append(Cell2DIndex(row: row.offset, col: element))
             }
             
-            return (row: row.offset, col: element)
+            return indices
         }
+        .reduce([], +)
     }
     
     // Overlap given kernel over certain section of our matrix
@@ -88,6 +93,22 @@ struct Convolutions {
 
 // MARK: - Convolution Kernels
 struct Kernels {
+    static var zeros: Matrix2D {
+        [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0]
+        ]
+    }
+    
+    static var center: Matrix2D {
+        [
+            [0, 0, 0],
+            [0, 1, 0],
+            [0, 0, 0]
+        ]
+    }
+    
     static var standard: Matrix2D {
         [
             [1, 1, 1],
@@ -101,6 +122,30 @@ struct Kernels {
             [0, 1, 0],
             [1, 0, 1],
             [0, 1, 0]
+        ]
+    }
+    
+    static var horizontal: Matrix2D {
+        [
+            [-1, 0, 1],
+            [-2, 0, 2],
+            [-1, 0, 1]
+        ]
+    }
+    
+    static var vertical: Matrix2D {
+        [
+            [1, 2, 1],
+            [0, 0, 0],
+            [-1, -2, -1]
+        ]
+    }
+    
+    static var dpad: Matrix2D {
+        [
+            [0, 3, 0],
+            [3, 0, 3],
+            [0, 3, 0]
         ]
     }
 }
