@@ -88,6 +88,7 @@ extension AdventOfCode2022 {
             case Z =  0 // Empty
             case H =  1 // Head
             case X =  2 // Overlap
+            case S = -9 // Source
             
             var description: String {
                 get {
@@ -96,6 +97,7 @@ extension AdventOfCode2022 {
                     case .Z: return "."
                     case .H: return "H"
                     case .X: return "X"
+                    case .S: return "s"
                     }
                 }
             }
@@ -250,15 +252,19 @@ extension AdventOfCode2022 {
                 print("HEAD: \(self.HEAD.index)")
                 print("TAIL: \(self.TAIL.index)")
                 
-                self.canvas.described(from: (row: 0, col: 0), to: (row: 10, col: 10), textProvider: AdventOfCode2022.Day09.RopeCanvas.printCell)
+                self.canvas.described(from: (row: 0, col: 0), to: (row: 10, col: 10), textProvider: self.printCell)
             }
             
-            static func printCell(_ items: [Cell2D<Int>]) -> String {
+            func printCell(index: Cell2DIndex, items: [Cell2D<Int>]) -> String {
                 let value = items
                     .sorted { $1.item! < $0.item! }
                     .first?.item ?? Rope.Z.rawValue
                 
-                let element = Rope.init(rawValue: value) ?? Rope.Z
+                var element = Rope.init(rawValue: value) ?? Rope.Z
+                
+                if element == Rope.Z && index == (row: 0, col: 0) {
+                    element = Rope.S
+                }
                 
                 return element.description
             }

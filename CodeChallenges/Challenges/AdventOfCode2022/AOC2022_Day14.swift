@@ -55,12 +55,13 @@ extension AdventOfCode2022 {
         // MARK: - Logic Methods
         func part01(_ inputData: Input) -> Output {
             let SOURCE: Cell2DIndex = (row: 0, col: 500)
-            let TOP_LEFT: Cell2DIndex = (row: 0, col: 470)
-            let BOTTOM_RIGHT: Cell2DIndex = (row: 165, col: 535)
             
             var grid: SandCanvas = SandCanvas(source: SOURCE)
             
             grid.add(rocks: inputData)
+
+            let TOP_LEFT: Cell2DIndex = (row: 0, col: 470)
+            let BOTTOM_RIGHT: Cell2DIndex = (row: grid.groundLevel, col: 535)
 
             grid.debug(from: TOP_LEFT, to: BOTTOM_RIGHT)
 
@@ -81,7 +82,32 @@ extension AdventOfCode2022 {
         }
         
         func part02(_ inputData: Input) -> Output {
-            return -1
+            let SOURCE: Cell2DIndex = (row: 0, col: 500)
+            
+            var grid: SandCanvas = SandCanvas(source: SOURCE, hasGround: true)
+            
+            grid.add(rocks: inputData)
+
+            let TOP_LEFT: Cell2DIndex = (row: 0, col: 470)
+            let BOTTOM_RIGHT: Cell2DIndex = (row: grid.groundLevel, col: 535)
+
+            grid.debug(from: TOP_LEFT, to: BOTTOM_RIGHT)
+
+            var offender: Cell2D<Int>? = nil
+
+            repeat {
+                grid.addGrain()
+                offender = grid.moveGrains()
+                
+                print("grain count: \(grid.grains.count)")
+//                grid.debug(from: TOP_LEFT, to: BOTTOM_RIGHT)
+            } while (offender == nil)
+
+            grid.debug(from: TOP_LEFT, to: BOTTOM_RIGHT)
+            print("FINISHED")
+            print("grains in grid: \(grid.grains.count)")
+            
+            return grid.grains.count
         }
         
         
@@ -92,6 +118,7 @@ extension AdventOfCode2022 {
             case I =     1 // Falling Sand
             case O =   -99 // Settled Sand
             case R =  -100 // Rock
+            case G =  -200 // Ground
             
             public var description: String {
                 get {
@@ -101,6 +128,7 @@ extension AdventOfCode2022 {
                     case .Z: return "."
                     case .I: return "*"
                     case .O: return "o"
+                    case .G: return "="
                     }
                 }
             }
@@ -149,11 +177,14 @@ extension AdventOfCode2022 {
         
         struct SandCanvas {
             // Input variables
+            var hasGround: Bool
+            
             var canvas: Grid2D<Int>
             
-            init(source: Cell2DIndex) {
-                self.canvas = Grid2D<Int>()
+            init(source: Cell2DIndex, hasGround: Bool = false) {
+                self.hasGround = hasGround
                 
+                self.canvas = Grid2D<Int>()
                 self.canvas.items.insert(Cell2D<Int>(at: source, item: Sandbox.S.rawValue))
             }
             
@@ -182,6 +213,12 @@ extension AdventOfCode2022 {
                 }
             }
             
+            var groundLevel: Int {
+                get {
+                    return self.lowestRock.row + 2
+                }
+            }
+            
             mutating func addGrain() {
                 self.canvas.items.insert(Cell2D<Int>(at: SOURCE.index, item: Sandbox.I.rawValue))
             }
@@ -200,6 +237,13 @@ extension AdventOfCode2022 {
                                             .filter { ($0.row == grain.row + 1) && abs($0.col - grain.col) <= 1 || $0.item == Sandbox.I.rawValue })
                         
                         grainArea.items.formUnion(region)
+                        
+                        if self.hasGround && grain.index.row == 164 {
+                            let ground = stride(from: grain.col - 1, through: grain.col + 1, by: 1)
+                                .map { Cell2D(row: self.groundLevel, col: $0, item: Sandbox.G.rawValue) }
+                            
+                            grainArea.items.formUnion(ground)
+                        }
                         
                         let candidates = grainArea.convolved(around: grain.index)
                             .filter { 0 < ($0.item ?? 0) }
@@ -222,8 +266,10 @@ extension AdventOfCode2022 {
                             //print("nowhere good to go...")
                             
                             // Best position is where we already are
-                            self.canvas.items.insert(Cell2D<Int>(at: grain.index, item: Sandbox.O.rawValue))
-                            return nil
+                            let settledGrain = Cell2D<Int>(at: grain.index, item: Sandbox.O.rawValue)
+                            self.canvas.items.insert(settledGrain)
+                            
+                            return (newLocation == self.SOURCE.index) ? settledGrain : nil
                         }
                         
                         //print("found target \(target)")
@@ -231,9 +277,16 @@ extension AdventOfCode2022 {
                     
                         self.canvas.items.insert(Cell2D<Int>(at: newLocation, item: Sandbox.I.rawValue))
                     }
-                } while (self.canvas.items.filter { $0.item == Sandbox.I.rawValue && $0.row <= self.lowestRock.row }.count > 0)
+                } while (self.canvas.items
+                    .filter { // Stop loop whenever...
+                        ($0.item == Sandbox.I.rawValue && $0.row <= self.groundLevel) // ...grain of sand is below the ground...
+                        || ($0.item == Sandbox.O.rawValue && $0.index == SOURCE.index) // ...or when our source is filled up
+                    }.count > 0)
                 
-                return self.canvas.items.filter { $0.item == Sandbox.I.rawValue }.first!
+                return self.canvas.items.filter {
+                    ($0.item == Sandbox.I.rawValue)
+                    || ($0.index == SOURCE.index && $0.item != Sandbox.S.rawValue)
+                }.first!
             }
             
             func getRelativeCoordinate(for grain: Cell2D<Int>, from cell: Cell2DIndex) -> Cell2DIndex {
@@ -250,13 +303,18 @@ extension AdventOfCode2022 {
             func debug(from: Cell2DIndex, to: Cell2DIndex) {
                 print("=== SANDBOX ===")
                 
-                self.canvas.described(from: from, to: to, showIndices: true, textProvider: SandCanvas.printCell)
+                self.canvas.described(from: from, to: to, showIndices: true, textProvider: self.printCell)
             }
             
-            static func printCell(_ items: [Cell2D<Int>]) -> String {
+            func printCell(index: Cell2DIndex, items: [Cell2D<Int>]) -> String {
                 let value = items.sorted { $1.item! < $0.item! }.first?.item ?? Sandbox.Z.rawValue
                 
-                let element = Sandbox.init(rawValue: value) ?? Sandbox.Z
+                var element = Sandbox.init(rawValue: value) ?? Sandbox.Z
+                
+                if element == Sandbox.Z && index.row == self.groundLevel {
+                    element = Sandbox.G
+                }
+                
                 return element.description
             }
         }

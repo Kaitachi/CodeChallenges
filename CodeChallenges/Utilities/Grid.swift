@@ -106,7 +106,7 @@ public struct Grid2D<T: Hashable & Equatable> {
         return results
     }
     
-    func described(from: Cell2DIndex, to: Cell2DIndex, showIndices: Bool = false, textProvider text: ([Cell2D<T>]) -> String) {
+    func described(from: Cell2DIndex, to: Cell2DIndex, showIndices: Bool = false, textProvider text: (Cell2DIndex, [Cell2D<T>]) -> String) {
         let largestRowNum: Int = [from.row.length, to.row.length].max()! + 1
         
         if showIndices {
@@ -136,7 +136,7 @@ public struct Grid2D<T: Hashable & Equatable> {
                         let index: Cell2DIndex = (row: row, col: col)
                         let items: [Cell2D<T>] = self.items.filter { $0.index == index }
                                             
-                        print(text(Array(items)), terminator: "")
+                        print(text((row: row, col: col), Array(items)), terminator: "")
                     }
                 
                 print()
