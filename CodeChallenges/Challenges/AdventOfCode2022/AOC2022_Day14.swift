@@ -98,8 +98,9 @@ extension AdventOfCode2022 {
             repeat {
                 grid.addGrain()
                 offender = grid.moveGrains()
+                grid.createAirPockets()
                 
-                print("grain count: \(grid.grains.count)")
+                print("grain count: \(grid.grains.count + grid.sandpit.items.count)")
 //                grid.debug(from: TOP_LEFT, to: BOTTOM_RIGHT)
             } while (offender == nil)
 
@@ -107,7 +108,7 @@ extension AdventOfCode2022 {
             print("FINISHED")
             print("grains in grid: \(grid.grains.count)")
             
-            return grid.grains.count
+            return grid.grains.count + grid.sandpit.items.count
         }
         
         
@@ -180,11 +181,13 @@ extension AdventOfCode2022 {
             var hasGround: Bool
             
             var canvas: Grid2D<Int>
+            var sandpit: Grid2D<Int>
             
             init(source: Cell2DIndex, hasGround: Bool = false) {
                 self.hasGround = hasGround
                 
                 self.canvas = Grid2D<Int>()
+                self.sandpit = Grid2D<Int>()
                 self.canvas.items.insert(Cell2D<Int>(at: source, item: Sandbox.S.rawValue))
             }
             
@@ -229,7 +232,7 @@ extension AdventOfCode2022 {
                 
                     for grain in movingGrains {
                         //print("moving grain \(grain)")
-                        var grainArea = Grid2D<Int>(with:[
+                        var grainArea = Grid2D<Int>(with: [
                             (matrix: Kernels.gravity, type: .primary)
                         ])
                         
@@ -238,7 +241,7 @@ extension AdventOfCode2022 {
                         
                         grainArea.items.formUnion(region)
                         
-                        if self.hasGround && grain.index.row == 164 {
+                        if self.hasGround && grain.index.row == self.groundLevel - 1 {
                             let ground = stride(from: grain.col - 1, through: grain.col + 1, by: 1)
                                 .map { Cell2D(row: self.groundLevel, col: $0, item: Sandbox.G.rawValue) }
                             
@@ -287,6 +290,33 @@ extension AdventOfCode2022 {
                     ($0.item == Sandbox.I.rawValue)
                     || ($0.index == SOURCE.index && $0.item != Sandbox.S.rawValue)
                 }.first!
+            }
+            
+            mutating func createAirPockets() {
+                var fullSandbox: Grid2D<Int> = Grid2D<Int>()
+                var buriedGrains: [Cell2D<Int>] = [Cell2D<Int>]()
+                
+                fullSandbox.items.formUnion(self.canvas.items)
+                fullSandbox.items.formUnion(self.sandpit.items)
+                
+                fullSandbox.items
+                    .filter { $0.item == Sandbox.O.rawValue }
+                    .forEach { grain in
+                        var grainArea: Grid2D<Int> = Grid2D<Int>()
+                        
+                        grainArea.items.formUnion(fullSandbox.items
+                            .filter { abs($0.row - grain.row) <= 1 && abs($0.col - grain.col) <= 1 })
+                        
+                        let result = grainArea.convolve(single: Kernels.buried, at: grain.index)
+                            //.filter { $0.item == Sandbox.O.rawValue }
+                        
+                        if result == 5 * Sandbox.O.rawValue {
+                            buriedGrains.append(grain)
+                        }
+                    }
+                
+                self.canvas.items.subtract(buriedGrains)
+                self.sandpit.items.formUnion(buriedGrains)
             }
             
             func getRelativeCoordinate(for grain: Cell2D<Int>, from cell: Cell2DIndex) -> Cell2DIndex {

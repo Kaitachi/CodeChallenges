@@ -156,4 +156,12 @@ struct Kernels {
             [0, 0, 0]
         ]
     }
+    
+    static var buried: Matrix2D {
+        [
+            [1, 1, 1],
+            [1, 0, 1],
+            [0, 0, 0]
+        ]
+    }
 }
